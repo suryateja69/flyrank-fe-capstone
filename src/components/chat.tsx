@@ -1,11 +1,29 @@
 "use client";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
+import { z } from "zod";
 import { ArrowDown, ArrowUp, Square, Sparkles, RotateCcw } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Message } from "./message";
 
-const transport = new DefaultChatTransport({ api: "/api/chat" });
+const errorSchema = z.object({ error: z.string().max(1000) });
+const transport = new DefaultChatTransport({
+  api: "/api/chat",
+  fetch: async (input, init) => {
+    const response = await fetch(input, init);
+    if (!response.ok) {
+      const parsed = errorSchema.safeParse(
+        await response.json().catch(() => null),
+      );
+      throw new Error(
+        parsed.success
+          ? parsed.data.error
+          : "The request failed. Please retry shortly.",
+      );
+    }
+    return response;
+  },
+});
 export function Chat() {
   const {
     messages,
@@ -150,7 +168,7 @@ export function Chat() {
         </button>
       )}
       {error && (
-        <div className="error-box" role="alert">
+        <div className="error-box" role="alert" aria-label="Conversation error">
           <p>
             {error.message || "The response was interrupted. Please retry."}
           </p>

@@ -72,6 +72,10 @@ test("primary discovery flow renders a typed score and retries a failed response
     });
   });
   await page.goto("/");
+  await page.screenshot({
+    path: "test-results/screenshots/overview.png",
+    fullPage: true,
+  });
   await page.getByRole("link", { name: "Start project discovery" }).click();
   await page
     .getByLabel("Describe your project")
@@ -86,9 +90,17 @@ test("primary discovery flow renders a typed score and retries a failed response
     .getByLabel("Describe your project")
     .fill("Can you explain the next step?");
   await page.getByRole("button", { name: "Send message", exact: true }).click();
-  await expect(page.getByRole("alert")).toBeVisible();
+  await expect(
+    page.getByRole("alert", { name: "Conversation error" }),
+  ).toBeVisible();
+  await page.screenshot({
+    path: "test-results/screenshots/recoverable-error.png",
+    fullPage: true,
+  });
   await page.getByRole("button", { name: "Retry last response" }).click();
-  await expect(page.getByRole("alert")).toHaveCount(0);
+  await expect(
+    page.getByRole("alert", { name: "Conversation error" }),
+  ).toHaveCount(0);
   await expect(page.getByRole("article", { name: "Your message" })).toHaveCount(
     2,
   );

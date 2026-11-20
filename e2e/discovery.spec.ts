@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
-test("primary discovery flow streams, stops, retries, and renders a score", async ({
+test("primary discovery flow renders a typed score and retries a failed response", async ({
   page,
 }) => {
   let attempts = 0;

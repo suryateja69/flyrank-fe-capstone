@@ -157,3 +157,13 @@ describe("Accessible custom patterns", () => {
     );
   });
 });
+
+it("rejects a tool result containing non-text reasons", () => {
+  render(
+    <ToolResult
+      state="output-available"
+      output={{ ...scoreLead(input), reasons: [{ unexpected: "object" }] }}
+    />,
+  );
+  expect(screen.getByRole("alert")).toHaveTextContent("incomplete data");
+});

@@ -3,9 +3,9 @@
 ## Measured locally on 20 November 2026
 
 - Node 24.22.3 and npm 11.19.1.
-- `npm run typecheck` passed before the last documentation/source-formatting pass; rerun required after final source changes.
-- `npm run build` produced all application routes successfully before the last library reference update; final rerun required.
-- 18 Vitest tests passed. Measured core-component coverage was 74.86% statements and 88.75% lines. This is the configured core-component set, not a whole-repository coverage claim.
+- `npm run typecheck` passed after typed result validation was added.
+- `npm run build` produced all application routes successfully with the shadcn reference components included.
+- 19 Vitest tests passed. Measured core-component coverage was 75.12% statements and 77.96% lines. This is the configured core-component set, not a whole-repository coverage claim.
 - A regression test originally failed when Shift+Tab escaped the custom dialog. A `:is(button,input,a[href]):not(:disabled)` selector fixed focusable node ordering in the test DOM.
 
 ## Verification blocked or pending

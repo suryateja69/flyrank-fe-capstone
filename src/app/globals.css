@@ -133,7 +133,7 @@ h3 {
   font-size: 10px;
   letter-spacing: 1.6px;
   font-weight: 700;
-  color: #526b5d;
+  color: #52634f;
 }
 .nav-caption {
   margin: 0 12px 13px;
@@ -144,7 +144,7 @@ h3 {
   align-items: center;
   gap: 12px;
   padding: 13px 12px;
-  color: #5a6d60;
+  color: #52634f;
   border-radius: 9px;
   margin-bottom: 5px;
   font-size: 12px;
@@ -174,7 +174,7 @@ h3 {
   font-size: 12px;
 }
 .help-card p {
-  color: #60705c;
+  color: #52634f;
   font-size: 11px;
   margin: 7px 0 14px;
 }
@@ -222,7 +222,7 @@ h3 {
   align-items: center;
   justify-content: space-between;
   padding: 0 46px;
-  color: #64746b;
+  color: #52634f;
   font-size: 11px;
 }
 .breadcrumb {
@@ -233,7 +233,7 @@ h3 {
   display: flex;
   gap: 8px;
   align-items: center;
-  color: #556c5c;
+  color: #52634f;
 }
 .status-dot,
 .mini-dot {
@@ -264,7 +264,7 @@ h3 {
   margin-bottom: 0;
 }
 .date-label {
-  color: #7b887d;
+  color: #52634f;
   font-size: 10px;
   padding-bottom: 4px;
 }
@@ -324,7 +324,7 @@ h3 {
 .hero-details {
   display: flex;
   gap: 19px;
-  color: #5d7056;
+  color: #52634f;
   font-size: 9px;
   margin-top: 18px;
 }
@@ -369,7 +369,7 @@ h3 {
   width: 47px;
   height: 47px;
   background: #e7efdc;
-  color: #4d7148;
+  color: #52634f;
   margin-bottom: 19px;
 }
 .visual-line {
@@ -390,7 +390,7 @@ h3 {
   padding-top: 15px;
   margin-top: 20px;
   font-size: 9px;
-  color: #68775e;
+  color: #52634f;
 }
 .visual-score strong {
   font-size: 11px;
@@ -406,7 +406,7 @@ h3 {
   border-radius: 50%;
   background: #e1efce;
   padding: 7px;
-  color: #537344;
+  color: #52634f;
 }
 .floating-tag {
   position: absolute;
@@ -427,7 +427,7 @@ h3 {
   position: absolute;
   bottom: 11px;
   left: 12px;
-  color: #72945c;
+  color: #52634f;
 }
 .workflow-section {
   margin-top: 35px;
@@ -448,7 +448,7 @@ h3 {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #5a705f;
+  color: #52634f;
 }
 .workflow-grid {
   display: grid;
@@ -466,7 +466,7 @@ h3 {
   padding: 10px;
   background: #f0f4e9;
   border-radius: 10px;
-  color: #4c6a4e;
+  color: #52634f;
   margin-bottom: 19px;
 }
 .workflow-card h3 {
@@ -476,7 +476,7 @@ h3 {
 }
 .workflow-card p {
   font-size: 11px;
-  color: #6a796c;
+  color: #52634f;
   line-height: 1.8;
   margin-bottom: 0;
 }
@@ -485,7 +485,7 @@ h3 {
 }
 .muted-small {
   font-size: 10px;
-  color: #78877b;
+  color: #52634f;
 }
 .empty-overview {
   border: 1px dashed #d8dfd0;
@@ -498,7 +498,7 @@ h3 {
 }
 .empty-inbox {
   background: #eef2e7;
-  color: #7d9274;
+  color: #52634f;
   border-radius: 12px;
   padding: 13px;
   display: flex;
@@ -510,7 +510,7 @@ h3 {
 }
 .empty-overview p {
   font-size: 10px;
-  color: #6f7c6f;
+  color: #52634f;
   margin: 0;
 }
 .text-button {
@@ -527,7 +527,7 @@ h3 {
   display: flex;
   justify-content: space-between;
   font-size: 9px;
-  color: #7c8879;
+  color: #52634f;
 }
 .page-footer a {
   display: flex;
@@ -565,7 +565,7 @@ h3 {
 }
 .chat-header p {
   font-size: 10px;
-  color: #6a7c6e;
+  color: #52634f;
   margin: 0;
 }
 .assistant-avatar {
@@ -578,7 +578,7 @@ h3 {
 .icon-button {
   background: transparent;
   border: 0;
-  color: #667a68;
+  color: #52634f;
   padding: 8px;
 }
 .message-list {
@@ -596,7 +596,7 @@ h3 {
   width: 66px;
   height: 66px;
   background: #f0f5e7;
-  color: #5f8050;
+  color: #52634f;
   display: grid;
   place-items: center;
   border-radius: 20px;
@@ -611,7 +611,7 @@ h3 {
 .chat-empty > p {
   font-size: 12px;
   line-height: 1.8;
-  color: #6c7d6c;
+  color: #52634f;
   margin-bottom: 24px;
 }
 .suggestion {
@@ -661,7 +661,7 @@ h3 {
 }
 .composer-footer > span {
   font-size: 9px;
-  color: #6a7c68;
+  color: #52634f;
 }
 .send-button {
   width: 34px;
@@ -675,7 +675,7 @@ h3 {
 }
 .chat-fineprint {
   text-align: center;
-  color: #687964;
+  color: #52634f;
   font-size: 9px;
   margin: 12px 8px 15px;
 }
@@ -687,7 +687,7 @@ h3 {
   margin: 18px 0 16px;
 }
 .discovery-notes > p {
-  color: #677a66;
+  color: #52634f;
   font-size: 12px;
   line-height: 1.9;
 }
@@ -702,7 +702,7 @@ h3 {
   font-size: 11px;
   align-items: flex-start;
   margin: 14px 0;
-  color: #4e6a50;
+  color: #52634f;
 }
 .privacy-note {
   background: #eef3e7;
@@ -717,7 +717,7 @@ h3 {
 }
 .privacy-note p {
   font-size: 11px;
-  color: #63765d;
+  color: #52634f;
   line-height: 1.8;
   margin: 0;
 }
@@ -735,7 +735,7 @@ h3 {
   font-size: 8px;
   font-weight: 700;
   letter-spacing: 1.4px;
-  color: #4f704e;
+  color: #52634f;
   margin-bottom: 8px;
 }
 .message-text {
@@ -748,7 +748,7 @@ h3 {
 .thinking,
 .tool-status {
   font-size: 12px;
-  color: #546b50;
+  color: #52634f;
   line-height: 1.7;
 }
 .pulse {
@@ -794,7 +794,7 @@ h3 {
   display: block;
   font-size: 10px;
   letter-spacing: 0;
-  color: #6b7e61;
+  color: #52634f;
   text-align: right;
 }
 .pill {
@@ -802,7 +802,7 @@ h3 {
   font-size: 10px;
   padding: 3px 9px;
   background: #edf2e5;
-  color: #4c6946;
+  color: #52634f;
   border-radius: 20px;
 }
 .pill.priority {
@@ -816,7 +816,7 @@ h3 {
 .score-card ul {
   padding-left: 16px;
   font-size: 11px;
-  color: #5f7558;
+  color: #52634f;
   line-height: 1.9;
 }
 .next-action {
@@ -833,7 +833,7 @@ h3 {
 .score-card small {
   display: block;
   font-size: 9px;
-  color: #6e7e65;
+  color: #52634f;
   margin-top: 12px;
 }
 .error-box {
@@ -882,7 +882,7 @@ h3 {
 }
 .settings-form > p {
   font-size: 12px;
-  color: #65755f;
+  color: #52634f;
 }
 .settings-form label {
   display: block;
@@ -910,7 +910,7 @@ h3 {
 }
 .prose-page p {
   line-height: 1.9;
-  color: #586e55;
+  color: #52634f;
 }
 .prose-page h2 {
   margin-top: 32px;
@@ -965,7 +965,7 @@ h3 {
   font-size: 20px;
 }
 .lab-card p {
-  color: #5e735b;
+  color: #52634f;
   font-size: 12px;
 }
 .lab-card button {
@@ -1338,4 +1338,29 @@ body {
 }
 .chat-header p {
   font-size: 12px;
+}
+.demo-button {
+  min-width: 175px;
+}
+.demo-button.success {
+  background: #245b3b;
+  color: white;
+}
+.demo-button.error {
+  background: #823b27;
+  color: white;
+}
+.button-label {
+  display: inline-block;
+  animation: label-enter 0.2s ease-out;
+}
+@keyframes label-enter {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

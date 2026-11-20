@@ -226,7 +226,7 @@ export function MotionButton() {
         Simulate failure
       </label>
       <button
-        className="demo-button"
+        className={`demo-button ${state}`}
         disabled={state === "loading"}
         aria-busy={state === "loading"}
         onClick={() => {
@@ -239,13 +239,15 @@ export function MotionButton() {
           }, 750);
         }}
       >
-        {state === "loading"
-          ? "Saving…"
-          : state === "success"
-            ? "Saved successfully"
-            : state === "error"
-              ? "Save failed — retry"
-              : "Save project"}
+        <span key={state} className="button-label">
+          {state === "loading"
+            ? "Saving…"
+            : state === "success"
+              ? "Saved successfully"
+              : state === "error"
+                ? "Save failed — retry"
+                : "Save project"}
+        </span>
       </button>
       <p role="status">
         {state === "error"

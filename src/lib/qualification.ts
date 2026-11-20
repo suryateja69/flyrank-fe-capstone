@@ -21,12 +21,13 @@ export const leadSchema = z.object({
 });
 
 export type LeadInput = z.infer<typeof leadSchema>;
-export type LeadScore = LeadInput & {
-  score: number;
-  category: "Priority" | "Nurture" | "Discovery";
-  reasons: string[];
-  nextAction: string;
-};
+export const leadScoreSchema = leadSchema.extend({
+  score: z.number().int().min(0).max(100),
+  category: z.enum(["Priority", "Nurture", "Discovery"]),
+  reasons: z.array(z.string().max(1000)).max(10),
+  nextAction: z.string().max(1000),
+});
+export type LeadScore = z.infer<typeof leadScoreSchema>;
 
 // The LLM collects facts. This deterministic, inspectable rubric scores them.
 export function scoreLead(input: LeadInput): LeadScore {

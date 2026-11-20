@@ -1,4 +1,4 @@
-import { leadSchema, type LeadScore } from "@/lib/qualification";
+import { leadSchema, leadScoreSchema } from "@/lib/qualification";
 import { ScoreCard } from "./score-card";
 
 export type ToolState =
@@ -42,20 +42,8 @@ export function ToolResult({
         </p>
       </div>
     );
-  const parsed = leadSchema.safeParse(output);
-  if (
-    !parsed.success ||
-    !output ||
-    typeof output !== "object" ||
-    !("score" in output) ||
-    typeof output.score !== "number" ||
-    !("reasons" in output) ||
-    !Array.isArray(output.reasons) ||
-    !("nextAction" in output) ||
-    typeof output.nextAction !== "string" ||
-    !("category" in output) ||
-    !["Priority", "Nurture", "Discovery"].includes(String(output.category))
-  ) {
+  const parsed = leadScoreSchema.safeParse(output);
+  if (!parsed.success) {
     return (
       <div className="error-box" role="alert">
         The qualification returned incomplete data. Ask the assistant to try
@@ -63,5 +51,5 @@ export function ToolResult({
       </div>
     );
   }
-  return <ScoreCard lead={output as LeadScore} />;
+  return <ScoreCard lead={parsed.data} />;
 }

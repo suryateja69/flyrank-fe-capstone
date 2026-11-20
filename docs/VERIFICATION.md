@@ -18,4 +18,10 @@ The fixtures on the tool-state page and in Playwright tests use clearly identifi
 
 ## GitHub browser test findings
 
-The second CI run passed the multi-page axe/overflow test at 375 and 1280 px after muted text colors were darkened. A later run passed the typed-score/retry flow, and caught a transient contrast failure during the button label’s fade-in. The animation now starts at 90% opacity so text remains readable throughout the transition. Final combined green-run evidence is still pending.
+The second CI run passed the multi-page axe/overflow test at 375 and 1280 px after muted text colors were darkened. A later run passed the typed-score/retry flow, and caught a transient contrast failure during the button label’s fade-in. The animation now starts at 90% opacity so text remains readable throughout the transition. The combined CI run passed at commit 07b908681ce66c18898272821c5c714b57689cf8. See the verified run and screenshot below.
+
+## Passing CI evidence
+
+[Quality checks run 4](https://github.com/suryateja69/flyrank-fe-capstone/actions/runs/44672327960) completed successfully. It ran typecheck, 19 unit/component tests, the production build, the mocked qualification/retry browser flow, and axe/overflow checks across five pages at 375 and 1280 px. The AI provider was mocked for browser testing; no real provider response is implied.
+
+![Passing CI screenshot](screenshots/ci-passing.jpg)

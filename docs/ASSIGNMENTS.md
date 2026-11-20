@@ -13,7 +13,7 @@ Assignment URLs and displayed codes differ on some current portal cards. Match b
 | FE-07 Tool output | Zod qualification tool, four states, score component, contract | Live model-triggered tool call |
 | FE-08 Error/empty states | Empty suggestions, retry, input/rate/config errors, boundary | Live happy/failure screenshots and mobile Safari |
 | Buttons with a Brain | Demo button, deterministic failure toggle, reduced-motion rule | Live URL and browser motion verification |
-| FE-09 Testing pass | 19 passing component/unit tests; mocked E2E, axe and CI definitions | Passing CI run, browser test results, CI screenshot; merge protection if enabled |
+| FE-09 Testing pass | 19 passing component/unit tests; mocked E2E, axe and CI definitions | CI evidence committed; merge protection still needs host configuration |
 | 3D experience | Lazy WebGL geometry, color/rotation controls, static fallback | Live URL and actual performance observations |
 | FE-10 Audit | Automated axe test definition and verification record | Deployed baseline/final Lighthouse, WAVE, keyboard evidence |
 | Signature shader hero | GLSL using time/resolution/mouse, readable content, hidden-tab pause | Live URL and browser rendering verification |

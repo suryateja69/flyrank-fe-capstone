@@ -4,9 +4,11 @@ LeadDesk helps a small agency qualify an incoming website or app inquiry. A guid
 
 Built for Surya Teja’s FlyRank Front-end AI Engineering internship.
 
+![LeadDesk overview captured in the browser test](docs/screenshots/overview.png)
+
 ## Current status
 
-The application code, accessible component playground, WebGL experiments, unit tests, and CI workflow are implemented. The local production build and 19 unit/component tests have passed. Live provider verification, deployment, CI execution, the deployed accessibility/performance audit, and FlyRank submissions still need completion. This repository is a work in progress.
+The application code, accessible component playground, WebGL experiments, unit tests, and CI workflow are implemented. The production build, 19 unit/component tests, mocked end-to-end flow, and phone/desktop axe and overflow checks have passed in GitHub Actions at commit 07b9086. Live provider verification, deployment, the deployed performance audit, and FlyRank submissions still need completion. This repository is a work in progress.
 
 ## Run locally
 

@@ -30,7 +30,6 @@ Add a Google AI provider key to `.env.local` to enable real AI responses. Withou
 | --- | --- | --- |
 | `GOOGLE_GENERATIVE_AI_API_KEY` | For live chat | Server-only Google AI provider credential. Keep in `.env.local` or the deployment host’s secret settings. |
 | `AI_MODEL` | Optional | Defaults to `gemini-2.5-flash`. Select a model available to your provider account. |
-| `APP_URL` | Optional | Canonical deployment origin for the server-rendered health page. Vercel’s `VERCEL_URL` is the default on Vercel. |
 
 ## Routes
 
@@ -84,7 +83,7 @@ Unit/component tests mock chat and never call a live provider. The Playwright pr
 
 ## Deployment
 
-Import this repo into Vercel as a Next.js application, configure the server-only provider key, and deploy. Set `APP_URL` to the final origin if needed. Git-connected deployment should create a preview per change. Follow `docs/DEPLOYMENT.md`; deployment has not been claimed complete.
+Import this repo into Vercel as a Next.js application, configure the server-only provider key, and deploy. The health page fetches its same-origin API in the browser, including on protected previews. Git-connected deployment should create a preview per change. Follow `docs/DEPLOYMENT.md`; deployment has not been claimed complete.
 
 The route limits conversation length, request size, output tokens, step count, and time. Its per-instance rate limiter is a baseline; a public deployment should also enable a host-level WAF/rate rule and provider spending/quota controls. In-memory rate windows reset on cold starts and are not shared across instances.
 

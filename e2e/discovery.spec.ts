@@ -114,6 +114,8 @@ test("key pages have no detectable axe WCAG A/AA violations at phone and desktop
       "/",
       "/discovery",
       "/settings",
+      "/about",
+      "/health",
       "/playground",
       "/playground/tools",
     ]) {
@@ -129,4 +131,17 @@ test("key pages have no detectable axe WCAG A/AA violations at phone and desktop
       ).toBe(true);
     }
   }
+});
+
+
+test("health page displays its real same-origin API response", async ({ page }) => {
+  const responsePromise = page.waitForResponse((response) =>
+    response.url().endsWith("/api/health") && response.request().method() === "GET",
+  );
+  await page.goto("/health");
+  const response = await responsePromise;
+  expect(response.ok()).toBe(true);
+  const health = await response.json();
+  await expect(page.getByRole("status")).toContainText(`Fetched at ${health.timestamp}`);
+  await expect(page.getByRole("status")).toContainText(`Application API · ${health.status}`);
 });

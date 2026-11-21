@@ -13,3 +13,7 @@ Final publication steering selected an isolated `week3-react` branch of the exis
 ## Review instruction
 
 > Review the generated TaskFlow implementation for persistence data loss, misleading saved-state feedback, invalid saved records, edit/delete state consistency, keyboard accessibility and meaningful test gaps. Make concrete corrections, document exact before/after behavior truthfully as AI-assisted review, and run tests, typecheck and production build.
+
+Exact coordinating-agent review message that prompted the correction pass:
+
+> Root review: initial saved-on-device badge falsely claims saved before successful persistence; hydrate effect currently overwrites malformed cache with []; fix truthful status and preserve cache on hydration; use dirty version/write only mutations. Delete editing task fails reset priority/error, fix. Record root review messages verbatim in prompt log and corrections. Need meaningful regression tests.

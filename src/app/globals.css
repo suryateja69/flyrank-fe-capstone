@@ -905,6 +905,28 @@ h3 {
   color: #943a25 !important;
   margin: 5px 0 0;
 }
+.notification-preferences {
+  margin-top: 24px;
+}
+.notification-preferences fieldset {
+  border: 0;
+  padding: 0;
+  margin: 24px 0 0;
+}
+.notification-preferences legend {
+  font-size: 12px;
+  font-weight: 600;
+}
+.notification-preferences label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.notification-preferences input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--green);
+}
 .prose-page {
   max-width: 850px;
 }

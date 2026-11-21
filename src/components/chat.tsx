@@ -41,6 +41,12 @@ export function Chat() {
   const list = useRef<HTMLDivElement>(null);
   const pending = status === "submitted" || status === "streaming";
   const busy = useRef(false);
+  const latest = messages.at(-1);
+  // The stream can open before its first visible text/tool part arrives.
+  const thinking = pending && (latest?.role !== "assistant" || !latest.parts.some(
+    (part) => (part.type === "text" && part.text.trim().length > 0) ||
+      part.type === "tool-qualifyLead" || part.type === "dynamic-tool",
+  ));
   const jump = () => {
     if (list.current) list.current.scrollTop = list.current.scrollHeight;
     setAtBottom(true);
@@ -147,14 +153,14 @@ export function Chat() {
         {messages.map((message) => (
           <Message key={message.id} message={message} />
         ))}
-        {status === "submitted" && (
+        {thinking && (
           <p className="thinking" role="status">
             <span className="pulse" /> Thinking about your project…
           </p>
         )}
       </div>
       <div className="sr-only" role="status" aria-live="polite">
-        {status === "submitted"
+        {thinking
           ? "Assistant is thinking."
           : status === "streaming"
             ? "Assistant is responding. Stop generation is available."
@@ -162,7 +168,7 @@ export function Chat() {
               ? "Response finished. Review the conversation above."
               : "Ready for your first message."}
       </div>
-      {!atBottom && pending && (
+      {!atBottom && messages.length > 0 && (
         <button className="jump-button" onClick={jump}>
           <ArrowDown size={14} /> Jump to latest
         </button>

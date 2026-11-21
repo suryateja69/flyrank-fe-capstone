@@ -1,6 +1,7 @@
 import React from "react";
 import { it, expect, vi, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import type { UIMessage } from "ai";
+import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Chat } from "@/components/chat";
 const mocks = vi.hoisted(() => ({
@@ -9,14 +10,16 @@ const mocks = vi.hoisted(() => ({
   regenerate: vi.fn().mockResolvedValue(undefined),
   setMessages: vi.fn(),
   clearError: vi.fn(),
+  messages: [] as UIMessage[],
   status: "ready",
   error: undefined as Error | undefined,
 }));
 vi.mock("@ai-sdk/react", () => ({
-  useChat: () => ({ ...mocks, messages: [] }),
+  useChat: () => ({ ...mocks }),
 }));
 beforeEach(() => {
   mocks.status = "ready";
+  mocks.messages = [];
   mocks.error = undefined;
   vi.clearAllMocks();
 });
@@ -65,4 +68,31 @@ it("renders an error and retries the failed response", async () => {
   expect(screen.getByRole("alert")).toHaveTextContent("Connection interrupted");
   await user.click(screen.getByRole("button", { name: "Retry last response" }));
   expect(mocks.regenerate).toHaveBeenCalledOnce();
+});
+
+it("shows thinking after stream opens until its first visible part", () => {
+  mocks.status = "streaming";
+  mocks.messages = [{ id: "a", role: "assistant", parts: [] }];
+  const view = render(<Chat />);
+  expect(screen.getByText("Thinking about your project…")).toBeVisible();
+  mocks.messages = [{ id: "a", role: "assistant", parts: [{ type: "text", text: "Hello" }] }];
+  view.rerender(<Chat />);
+  expect(screen.queryByText("Thinking about your project…")).not.toBeInTheDocument();
+});
+it("preserves reading position and keeps jump available after streaming finishes", () => {
+  mocks.status = "streaming";
+  mocks.messages = [{ id: "a", role: "assistant", parts: [{ type: "text", text: "First" }] }];
+  const view = render(<Chat />);
+  const log = screen.getByRole("log");
+  Object.defineProperties(log, { scrollHeight: { configurable: true, value: 1200 }, clientHeight: { value: 300 } });
+  log.scrollTop = 100;
+  fireEvent.scroll(log);
+  mocks.messages = [{ id: "a", role: "assistant", parts: [{ type: "text", text: "First and second" }] }];
+  view.rerender(<Chat />);
+  expect(log.scrollTop).toBe(100);
+  mocks.status = "ready";
+  view.rerender(<Chat />);
+  fireEvent.click(screen.getByRole("button", { name: "Jump to latest" }));
+  expect(log.scrollTop).toBe(1200);
+  expect(screen.queryByRole("button", { name: "Jump to latest" })).not.toBeInTheDocument();
 });

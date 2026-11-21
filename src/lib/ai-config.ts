@@ -1,3 +1,6 @@
+// Server-side AI configuration: override AI_MODEL in the deployment environment.
+// GOOGLE_GENERATIVE_AI_API_KEY is read by the Google provider only on the server;
+// never prefix it with NEXT_PUBLIC_ or place a credential in this file.
 export const MODEL = process.env.AI_MODEL || "gemini-2.5-flash";
 
 // A narrow role and evidence rule prevent the assistant inventing lead details.

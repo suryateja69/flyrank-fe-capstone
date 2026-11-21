@@ -1,4 +1,5 @@
 import { SettingsForm } from "@/components/settings-form";
+import { NotificationPreferencesForm } from "@/components/notification-preferences-form";
 export default function Settings() {
   return (
     <>
@@ -11,6 +12,7 @@ export default function Settings() {
           </div>
         </div>
         <SettingsForm />
+        <NotificationPreferencesForm />
       </div>
     </>
   );

@@ -1364,3 +1364,24 @@ body {
     transform: translateY(0);
   }
 }
+
+.notification-preferences {
+  margin-top: 24px;
+}
+.settings-form .notification-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.settings-form .notification-toggle input {
+  width: 18px;
+  height: 18px;
+}
+.notification-preferences select {
+  display: block;
+  width: 100%;
+  padding: 11px;
+  border: 1px solid #cbd6c4;
+  border-radius: 7px;
+  background: #fdfefa;
+}

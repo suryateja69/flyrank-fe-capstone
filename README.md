@@ -1,109 +1,35 @@
-# LeadDesk
+# TaskFlow · Week 3 React application
 
-LeadDesk helps a small agency qualify an incoming website or app inquiry. A guided AI conversation gathers the visitor’s business need, budget, timing, and purchasing authority. A typed server tool produces an explainable score and a suggested next action for a person to review.
-
-Built for Surya Teja’s FlyRank Front-end AI Engineering internship.
-
-![LeadDesk overview captured in the browser test](docs/screenshots/overview.png)
-
-## Current status
-
-The application code, accessible component playground, WebGL experiments, unit tests, and CI workflow are implemented. The production build, 19 unit/component tests, mocked end-to-end flow, and phone/desktop axe and overflow checks have passed in GitHub Actions at commit 07b9086. Live provider verification, deployment, the deployed performance audit, and FlyRank submissions still need completion. This repository is a work in progress.
+A standalone personal task planner built with React, TypeScript and Next.js. This branch contains an independent practice project; the LeadDesk capstone on `main` is separate. No AI service, account, API key or deployment is required.
 
 ## Run locally
 
-Requires Node.js 24 LTS and npm. From this repository:
+Requires Node.js 20.9 or newer and npm.
 
-```bash
+```sh
 npm ci
-cp .env.example .env.local
 npm run dev
 ```
 
-Open http://localhost:3000. On Windows, use Git Bash for the copy command, or copy `.env.example` to `.env.local` in File Explorer.
+Open http://localhost:3000. Use `npm run build` then `npm start` for production. Run `npm test` and `npm run typecheck` to validate.
 
-Add a Google AI provider key to `.env.local` to enable real AI responses. Without it the interface remains navigable and the chat shows an explicit configuration error. Sample data on `/playground/tools` demonstrates tool states independently of the AI provider. It is labeled as sample data.
+## Features
 
-## Environment variables
+- Create, edit, prioritize and delete tasks; undo the latest deletion.
+- Change task status between To do, In progress and Done.
+- Search by title, filter by status, view completion counts and momentum.
+- Browser storage persists tasks on this device. No server synchronization.
+- Responsive layout, native keyboard controls, visible focus and labeled inputs.
+- Trimmed task titles must contain 1–120 characters. Saved records are validated before use.
 
-| Name | Required | Purpose |
-| --- | --- | --- |
-| `GOOGLE_GENERATIVE_AI_API_KEY` | For live chat | Server-only Google AI provider credential. Keep in `.env.local` or the deployment host’s secret settings. |
-| `AI_MODEL` | Optional | Defaults to `gemini-2.5-flash`. Select a model available to your provider account. |
-| `APP_URL` | Optional | Canonical deployment origin for the server-rendered health page. Vercel’s `VERCEL_URL` is the default on Vercel. |
+## Exercise evidence
 
-## Routes
+- [Exact implementation and review prompts](docs/week3/PROMPTS.md)
+- [How AI assisted the work](docs/week3/AI_ASSISTANCE.md)
+- [Review corrections](docs/week3/REVIEW.md)
 
-| Route | Purpose |
-| --- | --- |
-| `/` | Workspace overview |
-| `/discovery` | Streaming project-discovery conversation |
-| `/settings` | Validated, device-local workspace preferences |
-| `/about` | Scoring, privacy, and product scope |
-| `/health` | Server-rendered fetch of `/api/health` |
-| `/playground` | Custom modal, tabs, disclosure, shadcn references, and stateful button |
-| `/playground/tools` | Four labeled tool-state fixtures |
-| `/playground/3d` | Lazy-loaded procedural WebGL cube with color and rotation controls |
-| `/playground/shader` | Custom GLSL hero with time, resolution, and pointer uniforms |
+The assignment's reference video could not be retrieved because the request was throttled. This application follows the supplied written exercise, and does not claim to reproduce or have watched the video. This work addresses the first React development task only; deployment is outside scope.
 
-## Architecture
+## Structure
 
-Next.js App Router supplies server-rendered route shells and server-only API handlers. React client components own conversation state, forms, keyboard widgets, and visual experiments. Tailwind and shared CSS tokens style the interface. Geist is bundled locally.
-
-`src/app/api/chat/route.ts` validates messages, enforces size and request limits, and calls the Google provider through AI SDK `streamText`. `src/lib/ai-config.ts` holds the model and system prompt. The system prompt asks one question at a time, collects supplied facts, and calls a qualification tool. `src/lib/qualification.ts` contains the Zod schema and deterministic scoring rubric. `src/components/chat.tsx` uses `useChat` to consume typed stream parts, stop generation, retain partial responses, and retry failures.
-
-The app does not claim to book meetings, email leads, or store a CRM record. Conversation state lasts for the current tab lifetime and clears on refresh. Chat text is transmitted to the configured AI provider. Workspace preference fields stay in localStorage and are excluded from model requests.
-
-## Tool contract
-
-**Name** `qualifyLead`
-
-| Input | Type |
-| --- | --- |
-| `company` | Trimmed string, 2–100 characters |
-| `project` | Trimmed string, 10–1,000 characters |
-| `budget` | `under-5k`, `5k-15k`, `15k-plus`, or `unknown` |
-| `timeline` | `this-month`, `this-quarter`, `exploring`, or `unknown` |
-| `decisionMaker` | Boolean confirmed by the visitor |
-
-Returns those fields plus `score` (0–100), `category` (`Priority`, `Nurture`, or `Discovery`), `reasons` (string array), and `nextAction` (string).
-
-Budget contributes 0–40, timing 0–30, authority 0 or 20, and a stated need 10 points. Thresholds are 70 for Priority and 40 for Nurture. The four tool states show collection progress, supplied input under review, a result card, or a recoverable error. Client rendering checks the result shape before showing it.
-
-## Verification
-
-```bash
-npm run typecheck
-npm run test:coverage
-npm run build
-npx playwright install chromium
-npm run test:e2e
-```
-
-Unit/component tests mock chat and never call a live provider. The Playwright primary-flow test supplies a mock AI SDK stream, checks typed result rendering, injects a 503, and checks retry. The axe test checks key pages at 375 px and 1280 px. CI runs checks on pushes and pull requests. See `docs/VERIFICATION.md` for measured results and limitations.
-
-## Deployment
-
-Import this repo into Vercel as a Next.js application, configure the server-only provider key, and deploy. Set `APP_URL` to the final origin if needed. Git-connected deployment should create a preview per change. Follow `docs/DEPLOYMENT.md`; deployment has not been claimed complete.
-
-The route limits conversation length, request size, output tokens, step count, and time. Its per-instance rate limiter is a baseline; a public deployment should also enable a host-level WAF/rate rule and provider spending/quota controls. In-memory rate windows reset on cold starts and are not shared across instances.
-
-## AI-assisted work
-
-Codex implemented the project in ChatGPT Work with the user’s authorization. The initial storefront placeholder was replaced after reading FlyRank’s current streaming-chat and tool-calling requirements. The AI reviewed the README and added runnable setup instructions, the environment table, route mapping, tool contract, and explicit completion status.
-
-Verification caught an accessibility regression: a grouped focusable-element selector returned an unexpected order in the test DOM, allowing Shift+Tab to leave the custom dialog. Changing the selector to a single `:is(...)` predicate preserved document order and made the regression test pass. Tests also verify invalid form descriptions, unknown qualification fields, partial streamed text, and malformed tool output.
-
-AI generated both implementation and tests. A person should review the code and understand it before presenting it as their work. No personal study completion, time measurements, user research, live API success, or mentor acceptance is asserted here.
-
-## Known limitations
-
-- No authenticated multi-user workspace, database, CRM delivery, or booking service.
-- Live AI requires a valid provider key and account quota; it is currently unverified.
-- The automated streaming fixture is immediate. Real token timing, stop/re-send, mobile Safari behavior, WAVE, deployed Lighthouse, and cross-browser checks still require evidence.
-- Two independent workflow-drill branches, the separate session-inspired React exercise, and AI Fluency course/personal-work evidence remain separate assignment work.
-- Visual WebGL demos use procedural geometry (432 bytes of vertex data), cap pixel ratio at 1.5, stop hidden-tab rendering, and offer reduced-motion/static fallbacks. Device frame rate and deployed bundle impact are not yet measured.
-
-## License
-
-MIT. Adapted shadcn/ui reference source is also MIT. Its copyright notice is retained in `docs/THIRD_PARTY_LICENSES.md`.
+`src/components/planner.tsx` owns the interactive UI; `src/lib/tasks.ts` defines the task model and saved-data boundary. `src/app` provides the page, metadata and responsive styles. Tests exercise workflows and persistence boundaries.

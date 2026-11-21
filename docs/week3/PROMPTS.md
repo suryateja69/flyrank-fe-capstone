@@ -1,0 +1,15 @@
+# Prompt record
+
+The following exact implementation brief was sent to the implementation AI agent (project context such as local paths is retained):
+
+> User authorizes agents and requests complete Week3 first task React app development with AI, not second deployment task. Repo /workspace/scratch/f7a2d3ee8dce/week2-frontend main HEAD3b9dd18. Create worktree /workspace/scratch/f7a2d3ee8dce/week3-react branch week3-react. Read AGENTS/Next guide in adjacent lead-desk/node_modules. Task brief: build similar React application independently using AI assistant; deliver completed application, prompts, short AI assistance explanation, examples manual improvements/corrections/refactoring after reviewing generated code. Video reference couldn't fetch (throttled); don't claim watched. Build a complete useful standalone React task planner at /planner integrated navigation in existing LeadDesk: add/edit/delete tasks with reversible confirmation or undo; title validation trimmed1-120, status todo/inprogress/done, priority low/medium/high, search/status filters, counts, empty states, validated localStorage hydration and failed persistence feedback, accessible labels native controls keyboard and mobile styling. No AI API dependency required. Use existing stack/deps. Record exact prompt and implementation in docs/week3/PROMPTS.md, AI_ASSISTANCE.md, README.md including honest reference limitation. Implement first pass commit then review and meaningful corrections second commit documenting exact before/after, accurately AI review not user manual edits. Add meaningful tests, run full tests/typecheck/build. Reuse dependencies via symlink remove before commit. You may not inspect other branches. No remote writes. Report SHA outcomes.
+
+The following exact steering changed the application to standalone:
+
+> Mentor Q&A says standalone fresh repository cleaner and acceptable app any topic (similar exercise only). CHANGE plan: create standalone project at week3-react standalone repo independent from capstone. Can copy minimal Next package/setup/styles if useful but remove unrelated capstone AI files. Task planner homepage, own identity TaskFlow. Will create GitHub suryateja69/flyrank-week3-react-taskflow. Root README thorough standalone with prompts/AI assistance/review corrections links. Preserve first/review commit evidence. No capstone remote changes. Any existing worktree can detach/remove git link carefully and init new repo or separate directory. Report final path.
+
+Final publication steering selected an isolated `week3-react` branch of the existing repository instead of creating a new repository. The application remains standalone at the branch root.
+
+## Review instruction
+
+> Review the generated TaskFlow implementation for persistence data loss, misleading saved-state feedback, invalid saved records, edit/delete state consistency, keyboard accessibility and meaningful test gaps. Make concrete corrections, document exact before/after behavior truthfully as AI-assisted review, and run tests, typecheck and production build.

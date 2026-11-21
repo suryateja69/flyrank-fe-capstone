@@ -1,13 +1,4 @@
 node_modules/
-dist/
-coverage/
-.env
-.env.*
-!.env.example
-*.local
-*.log
-.DS_Store
 .next/
+coverage/
 *.tsbuildinfo
-playwright-report/
-test-results/

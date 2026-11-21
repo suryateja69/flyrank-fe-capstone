@@ -1,0 +1,12 @@
+import React from 'react';
+import { render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { describe,it,expect } from 'vitest';
+import { Planner } from '@/components/planner';
+import { parseTasks, validTitle, STORAGE_KEY } from '@/lib/tasks';
+describe('saved data boundary',()=>{
+ it('rejects malformed, duplicate and invalid records',()=>{for(const value of ['{}','bad','[{"id":"a","title":" ","status":"todo","priority":"low"}]',JSON.stringify([{id:'a',title:'One',status:'todo',priority:'high'},{id:'a',title:'Two',status:'done',priority:'low'}])]) expect(()=>parseTasks(value)).toThrow();});
+ it('trims titles and enforces the length boundary',()=>{expect(validTitle(' '.repeat(3))).toBe(false);expect(validTitle('a'.repeat(120))).toBe(true);expect(validTitle('a'.repeat(121))).toBe(false);expect(parseTasks(null)).toEqual([]);});
+});
+it('adds, edits, filters, completes, deletes and restores a task',async()=>{const user=userEvent.setup();render(<Planner/>);await user.type(screen.getByLabelText('Task title'),'  Design dashboard  ');await user.click(screen.getByRole('button',{name:'＋ Add task'}));expect(screen.getByRole('heading',{name:'Design dashboard'})).toBeVisible();await user.click(screen.getByRole('button',{name:'Edit Design dashboard'}));await user.clear(screen.getByLabelText('Task title'));await user.type(screen.getByLabelText('Task title'),'Ship dashboard');await user.click(screen.getByRole('button',{name:'Save changes'}));await user.selectOptions(screen.getByLabelText('Status for Ship dashboard'),'done');await user.selectOptions(screen.getByLabelText('Filter by status'),'todo');expect(screen.getByText('No tasks match your view')).toBeVisible();await user.click(screen.getByRole('button',{name:'Clear filters'}));await user.click(screen.getByRole('button',{name:'Delete Ship dashboard'}));expect(screen.queryByRole('heading',{name:'Ship dashboard'})).not.toBeInTheDocument();await user.click(screen.getByRole('button',{name:'Undo'}));expect(screen.getByLabelText('Status for Ship dashboard')).toHaveValue('done');expect(JSON.parse(localStorage.getItem(STORAGE_KEY)!)).toHaveLength(1);});
+it('rejects a blank title and reports corrupt saved data',async()=>{localStorage.setItem(STORAGE_KEY,'broken');const user=userEvent.setup();render(<Planner/>);expect(screen.getByText(/Saved tasks could not be loaded/)).toBeVisible();await user.click(screen.getByRole('button',{name:'＋ Add task'}));expect(screen.getByRole('alert')).toHaveTextContent('Enter a title');});

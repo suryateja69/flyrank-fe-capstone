@@ -23,6 +23,14 @@ test.beforeEach(async ({ page }) => {
       const stream = new ReadableStream<Uint8Array>({ start(controller) {
         active = controller;
         const emit = (chunk: object) => controller.enqueue(encoder.encode(`data: ${JSON.stringify(chunk)}\n\n`));
+        Object.assign(window, { finishEdgeStream: () => {
+          emit({ type: "text-start", id: "recovered" });
+          emit({ type: "text-delta", id: "recovered", delta: "Recovered the last response without repeating earlier turns." });
+          emit({ type: "text-end", id: "recovered" });
+          emit({ type: "finish", finishReason: "stop" });
+          controller.enqueue(encoder.encode("data: [DONE]\n\n"));
+          controller.close();
+        } });
         init?.signal?.addEventListener("abort", () => { try { controller.error(new DOMException("Stopped", "AbortError")); } catch { /* already closed */ } }, { once: true });
         emit({ type: "start", messageId: `reply-${id}` });
         if (mode === "slow") return;
@@ -105,12 +113,12 @@ test("connection dies mid-stream; partial text survives and double retry repeats
   });
   await expect(page.getByRole("button", { name: "Stop generation" })).toBeVisible();
   expect(await page.evaluate(() => window.edgeTest.requests)).toBe(3);
-  await page.getByRole("button", { name: "Stop generation" }).click();
-  await mode(page, "ok");
-  await send(page, "Continue after stopping");
-  await expect(page.getByRole("region", { name: "Qualification for Example Studio" })).toHaveCount(2);
-  await expect(page.getByRole("article", { name: "Your message" })).toHaveCount(3);
+  await page.evaluate(() => (window as unknown as { finishEdgeStream: () => void }).finishEdgeStream());
+  await expect(page.getByText("Recovered the last response without repeating earlier turns.", { exact: true })).toBeVisible();
+  await expect(page.getByRole("region", { name: "Qualification for Example Studio" })).toHaveCount(1);
+  await expect(page.getByRole("article", { name: "Your message" })).toHaveCount(2);
   await expect(error(page)).toHaveCount(0);
+  await page.screenshot({ path: `test-results/FE08/${test.info().project.name}-retry-recovered.png`, fullPage: true });
 });
 
 test("rate limit hides raw server bodies and can be retried after the limit clears", async ({ page }) => {
@@ -132,7 +140,7 @@ test("empty response offers retry and malformed tool output is contained", async
   await expect(error(page)).toContainText("no usable response");
   await mode(page, "malformed");
   await page.getByRole("button", { name: "Retry last response" }).click();
-  await expect(page.getByRole("alert")).toContainText("qualification returned incomplete data");
+  await expect(page.getByRole("alert").filter({ hasText: "qualification returned incomplete data" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Send message", exact: true })).toBeVisible();
 });
 

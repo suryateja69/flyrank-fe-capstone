@@ -12,7 +12,7 @@ export default defineConfig({
   },
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },
-    { name: "mobile-webkit", testMatch: /edges.spec.ts/, use: { ...devices["iPhone 13"], launchOptions: {} } },
+    { name: "mobile-webkit", testMatch: /(?:edges|buttons).spec.ts/, use: { ...devices["iPhone 13"], launchOptions: {} } },
   ],
   webServer: {
     command: process.env.CI ? "npm start" : "npm run dev",

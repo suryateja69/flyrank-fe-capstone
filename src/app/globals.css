@@ -1400,3 +1400,50 @@ body {
 .slow-notice { color: #52634f; padding: 8px 18px; font-size: 12px; margin: 0; }
 .chat-header, .composer, .chat-fineprint, .chat-panel > .error-box, .slow-notice { flex-shrink: 0; }
 .message-list { min-height: 100px; }
+
+/* FE-AA1: state surfaces crossfade within one stable, keyboard-accessible button. */
+.buttons-page { max-width: 1180px; }
+.buttons-intro { color: var(--muted); max-width: 620px; margin-bottom: 30px; }
+.button-demo { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; background: white; }
+.button-demo__controls { padding: 32px; }
+.button-demo__controls h2 { font-size: 25px; }
+.button-demo__controls > p:not(.eyebrow) { color: #52634f; }
+.outcome-options { border: 0; padding: 0; margin: 24px 0 18px; }
+.outcome-options legend { font-weight: 600; margin-bottom: 10px; }
+.outcome-options label, .button-demo__toggle { display: flex; align-items: center; gap: 10px; min-height: 44px; }
+.outcome-options input, .button-demo__toggle input { accent-color: #235f49; width: 18px; height: 18px; }
+.button-demo__reset { margin-top: 16px; min-height: 44px; border: 1px solid #b9c9b0; border-radius: 8px; padding: 8px 16px; background: #f5f8f0; color: #254d32; }
+.button-demo__stage { min-width: 0; background: #edf3e6; padding: 48px 28px 28px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.button-demo__instruction { color: #52634f; font-size: 12px; margin: 22px 0 14px; max-width: 280px; }
+.button-demo__feedback { min-height: 120px; max-width: 320px; }
+.button-demo__feedback p { font-size: 13px; margin: 10px 0 0; color: #334f3e; }
+.button-demo__attempts { font-size: 12px; color: #52634f; margin: 8px 0 0; }
+.state-button { position: relative; isolation: isolate; width: 248px; max-width: 100%; height: 56px; flex-shrink: 0; border: 0; border-radius: 12px; padding: 0; background: #214f3b; color: white; transition: transform 120ms ease-out; }
+.state-button:not([aria-disabled="true"]):hover { transform: translateY(-2px) scale(1.015); }
+.state-button:not([aria-disabled="true"]):active { transform: translateY(0) scale(.97); }
+.state-button:focus-visible { outline: none; }
+.state-button::after { content: ""; position: absolute; inset: -6px; border: 3px solid #286c4e; border-radius: 17px; pointer-events: none; opacity: 0; transition: opacity 120ms ease-out; }
+.state-button:focus-visible::after { opacity: 1; }
+.state-button:disabled { opacity: 1; }
+.state-button[aria-disabled="true"] { cursor: default; }
+.state-button:disabled { cursor: not-allowed; }
+.state-button__face { position: absolute; inset: 0; border-radius: inherit; display: grid; place-items: center; opacity: 0; transform: translateY(4px) scale(.98); pointer-events: none; transition: opacity 200ms cubic-bezier(.2,.8,.2,1), transform 200ms cubic-bezier(.2,.8,.2,1); background: #214f3b; }
+.state-button__face.is-visible { opacity: 1; transform: translateY(0) scale(1); }
+.state-button__content { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; }
+.state-button__face--loading { background: #355b4c; }
+.state-button__face--success { background: #21623d; }
+.state-button__face--error { background: #843c25; }
+.state-button__face--disabled { background: #5c695d; }
+.state-button[data-phase="loading"] .state-button__spinner { animation: state-button-spin 800ms linear infinite; }
+.state-button[data-phase="error"] .state-button__face--error .state-button__content { animation: state-button-nudge 240ms ease-out 1; }
+@keyframes state-button-spin { to { transform: rotate(360deg); } }
+@keyframes state-button-nudge { 25% { transform: translateX(-3px); } 65% { transform: translateX(2px); } 100% { transform: translateX(0); } }
+.motion-notes { max-width: 800px; padding-top: 32px; }
+.motion-notes h2 { font-size: 22px; }
+.motion-notes p { color: #52634f; line-height: 1.8; }
+.motion-notes a { display: inline-block; text-decoration: underline; min-height: 44px; padding: 8px 0; }
+@media (max-width: 850px) { .button-demo { grid-template-columns: minmax(0, 1fr); } .button-demo__controls { padding: 26px; } .button-demo__stage { padding-top: 34px; } }
+@media (prefers-reduced-motion: reduce) {
+  .state-button, .state-button__face, .state-button__content, .state-button__spinner { transform: none !important; animation: none !important; transition: none !important; }
+  .state-button:hover, .state-button:active { transform: none !important; }
+}

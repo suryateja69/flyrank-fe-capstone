@@ -10,7 +10,7 @@ export default defineConfig({
       provider: "v8",
       reporter: ["text", "json-summary"],
       include: [
-        "src/components/{message,tool-result,score-card,settings-form,playground,chat}.tsx",
+        "src/components/{message,tool-result,score-card,settings-form,playground,chat,state-button,button-demo}.tsx",
       ],
     },
   },

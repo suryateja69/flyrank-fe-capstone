@@ -126,3 +126,9 @@ The UI renders input-streaming as a preparation skeleton, input-available as a l
 ## Checkpoint 1 — resilient discovery (FE08)
 
 [Failure inventory and sabotage checklist](docs/FE08.md) covers network loss, interrupted streams, provider errors, rate limits, slow and empty responses, incomplete/malformed tool results, and useful first-run states. Retry regenerates only the last assistant response and preserves visitor messages. Error bodies stay private. The browser suite exercises the same chat UI in Chromium and mobile WebKit, including screenshots of success and handled failures.
+
+## Buttons with a Brain (Week 6 · FE-AA1)
+
+Live demo: https://leaddesk-capstone.vercel.app/playground/buttons — select **Force success** or **Force failure**, then activate the save button. A disable toggle and reset control make the remaining cases inspectable. The save is explicitly simulated; it sends no data and requires no provider key.
+
+The reusable [StateButton](src/components/state-button.tsx) covers idle, hover/focus, press, loading, success, error/retry, disabled, and return to idle. Hover/press use 120ms ease-out for prompt acknowledgement. State faces crossfade and shift 4px over 200ms with cubic-bezier(.2,.8,.2,1), while a single 240ms nudge marks an error. Success holds 1.8s, error 3.2s, then the button returns to idle; the result text persists. Fixed dimensions avoid layout shifts, and only transform/opacity animate. Reduced motion removes animation while keeping all feedback and keyboard focus. [Requirements and verification](docs/FE-AA1.md).

@@ -1264,8 +1264,7 @@ body {
   margin: 25px 0;
 }
 .shader-hero {
-  height: 70dvh;
-  min-height: 420px;
+  min-height: 100dvh;
   position: relative;
   border-radius: 18px;
   overflow: hidden;

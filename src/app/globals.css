@@ -130,7 +130,7 @@ h3 {
 }
 .nav-caption,
 .eyebrow {
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 1.6px;
   font-weight: 700;
   color: #52634f;
@@ -223,11 +223,11 @@ h3 {
   justify-content: space-between;
   padding: 0 46px;
   color: #52634f;
-  font-size: 11px;
+  font-size: 12px;
 }
 .breadcrumb {
   margin: 0 12px;
-  color: #a2ada2;
+  color: inherit;
 }
 .status-link {
   display: flex;
@@ -265,7 +265,7 @@ h3 {
 }
 .date-label {
   color: #52634f;
-  font-size: 10px;
+  font-size: 12px;
   padding-bottom: 4px;
 }
 .overview-hero {
@@ -284,7 +284,7 @@ h3 {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  font-size: 9px;
+  font-size: 12px;
   letter-spacing: 1.2px;
   color: #315c40;
   font-weight: 700;
@@ -323,9 +323,10 @@ h3 {
 }
 .hero-details {
   display: flex;
+  flex-wrap: wrap;
   gap: 19px;
   color: #52634f;
-  font-size: 9px;
+  font-size: 12px;
   margin-top: 18px;
 }
 .hero-details span {
@@ -444,7 +445,7 @@ h3 {
   margin: 0;
 }
 .section-heading > a {
-  font-size: 10px;
+  font-size: 12px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -475,7 +476,7 @@ h3 {
   letter-spacing: -0.2px;
 }
 .workflow-card p {
-  font-size: 11px;
+  font-size: 13px;
   color: #52634f;
   line-height: 1.8;
   margin-bottom: 0;
@@ -484,7 +485,7 @@ h3 {
   margin-top: 33px;
 }
 .muted-small {
-  font-size: 10px;
+  font-size: 12px;
   color: #52634f;
 }
 .empty-overview {
@@ -509,12 +510,12 @@ h3 {
   letter-spacing: -0.15px;
 }
 .empty-overview p {
-  font-size: 10px;
+  font-size: 13px;
   color: #52634f;
   margin: 0;
 }
 .text-button {
-  font-size: 10px;
+  font-size: 12px;
   color: #315e42;
   display: flex;
   gap: 10px;
@@ -525,8 +526,9 @@ h3 {
 .page-footer {
   margin-top: 36px;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
-  font-size: 9px;
+  font-size: 12px;
   color: #52634f;
 }
 .page-footer a {
@@ -564,7 +566,7 @@ h3 {
   letter-spacing: -0.3px;
 }
 .chat-header p {
-  font-size: 10px;
+  font-size: 12px;
   color: #52634f;
   margin: 0;
 }
@@ -660,7 +662,7 @@ h3 {
   gap: 8px;
 }
 .composer-footer > span {
-  font-size: 9px;
+  font-size: 12px;
   color: #52634f;
 }
 .send-button {
@@ -676,7 +678,7 @@ h3 {
 .chat-fineprint {
   text-align: center;
   color: #52634f;
-  font-size: 9px;
+  font-size: 12px;
   margin: 12px 8px 15px;
 }
 .discovery-notes {
@@ -1051,9 +1053,6 @@ h3 {
   .workflow-card {
     padding: 28px;
   }
-  .workflow-card p {
-    font-size: 12px;
-  }
 }
 @media (max-width: 1100px) {
   .sidebar {
@@ -1128,7 +1127,6 @@ h3 {
   }
   .nav-link {
     white-space: nowrap;
-    font-size: 10px;
     padding: 9px 11px;
     gap: 7px;
     margin-bottom: 0;
@@ -1139,7 +1137,6 @@ h3 {
   .topbar {
     height: 50px;
     padding: 0 22px;
-    font-size: 10px;
   }
   .page-wrap {
     padding: 28px 20px 20px;
@@ -1177,9 +1174,6 @@ h3 {
   .workflow-icon {
     margin-bottom: 12px;
   }
-  .workflow-card p {
-    font-size: 12px;
-  }
   .section-heading h2 {
     font-size: 15px;
   }
@@ -1199,13 +1193,9 @@ h3 {
   .empty-overview h3 {
     font-size: 13px;
   }
-  .empty-overview p {
-    font-size: 11px;
-  }
   .page-footer {
     gap: 20px;
     line-height: 1.7;
-    font-size: 8px;
   }
   .discovery-grid {
     display: block;
@@ -1227,9 +1217,6 @@ h3 {
   .chat-header {
     padding: 15px;
   }
-  .chat-header p {
-    font-size: 9px;
-  }
   .message-list {
     padding: 16px;
   }
@@ -1238,9 +1225,6 @@ h3 {
   }
   .lab-grid {
     grid-template-columns: 1fr;
-  }
-  .status-link {
-    font-size: 9px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1310,10 +1294,10 @@ body {
 }
 .chat-fineprint,
 .composer-footer > span {
-  font-size: 11px;
+  font-size: 12px;
 }
 .nav-link {
-  font-size: 13px;
+  font-size: 12px;
 }
 .workflow-card p,
 .overview-hero p,
@@ -1330,7 +1314,7 @@ body {
 }
 .page-footer,
 .muted-small {
-  font-size: 11px;
+  font-size: 12px;
 }
 .message-text {
   font-size: 15px;

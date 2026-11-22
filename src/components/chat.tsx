@@ -31,6 +31,7 @@ export function Chat() {
   const [atBottom, setAtBottom] = useState(true);
   const [notice, setNotice] = useState("");
   const list = useRef<HTMLDivElement>(null);
+  const composer = useRef<HTMLTextAreaElement>(null);
   const pending = status === "submitted" || status === "streaming";
   const busy = useRef(false);
   const latest = messages.at(-1);
@@ -213,6 +214,7 @@ export function Chat() {
         className="composer"
         onSubmit={(event) => {
           event.preventDefault();
+          composer.current?.focus();
           send();
         }}
       >
@@ -220,6 +222,7 @@ export function Chat() {
           Describe your project
         </label>
         <textarea
+          ref={composer}
           id="chat-input"
           rows={2}
           placeholder="Tell us a little about your project…"
@@ -246,6 +249,7 @@ export function Chat() {
               className="send-button"
               aria-label="Stop generation"
               onClick={() => {
+                composer.current?.focus();
                 void stop();
               }}
             >

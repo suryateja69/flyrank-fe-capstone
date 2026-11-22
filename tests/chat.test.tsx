@@ -42,14 +42,19 @@ it("submits a message once and clears the composer", async () => {
     text: "A company website",
   });
   expect(screen.getByLabelText("Describe your project")).toHaveValue("");
+  expect(screen.getByLabelText("Describe your project")).toHaveFocus();
 });
 it("announces pending state and exposes a working stop control", async () => {
   mocks.status = "submitted";
   const user = userEvent.setup();
   render(<Chat />);
   expect(screen.getByText("Thinking about your project…")).toBeVisible();
-  await user.click(screen.getByRole("button", { name: "Stop generation" }));
+  screen.getByLabelText("Describe your project").focus();
+  await user.tab();
+  expect(screen.getByRole("button", { name: "Stop generation" })).toHaveFocus();
+  await user.keyboard(" ");
   expect(mocks.stop).toHaveBeenCalledOnce();
+  expect(screen.getByLabelText("Describe your project")).toHaveFocus();
 });
 it("keeps a stop control available during streaming", () => {
   mocks.status = "streaming";

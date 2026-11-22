@@ -111,7 +111,7 @@ npm run test:e2e
 
 Unit/component and end-to-end fixtures mock AI responses and do not spend provider credits. The browser configuration includes desktop Chromium and selected mobile WebKit cases. WebKit emulation does not certify real iPhone Safari.
 
-TypeScript and the production build passed during the Week 8 shader update. The deployed discovery flow was verified with a real provider response on 22 November 2026 in Chrome. Firefox, desktop Safari and physical mobile Safari were not available in the review browser and are **not claimed as tested**. WAVE and the full FE-10 audit remain separate unfinished verification; Lighthouse alone does not prove accessibility. Existing screenshots are labeled evidence from earlier checks, not new cross-browser evidence.
+TypeScript and the production build passed during the Week 8 shader update. The deployed discovery flow was verified with a real provider response on 22 November 2026 in Chrome. Firefox, desktop Safari and physical mobile Safari were not available in the review browser and are **not claimed as tested**. [The FE-10 audit](AUDIT.md) records before-and-after Lighthouse and keyboard checks. Post-fix WAVE verification remains open. Existing screenshots are labeled evidence from earlier checks, not new cross-browser evidence.
 
 ## How AI tools built this
 

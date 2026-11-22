@@ -3,23 +3,14 @@ import {
   convertToModelMessages,
   stepCountIs,
   streamText,
-  tool,
   validateUIMessages,
 } from "ai";
-import type { UIMessage, UIDataTypes, InferUITools } from "ai";
-import { leadSchema, scoreLead } from "@/lib/qualification";
+import type { LeadMessage } from "@/lib/tools";
+import { leadTools as tools } from "@/lib/tools";
 import { MODEL, SYSTEM_PROMPT } from "@/lib/ai-config";
 import { takeRateLimit } from "@/lib/rate-limit";
 
 export const maxDuration = 30;
-const tools = {
-  qualifyLead: tool({
-    description:
-      "Score a business inquiry using visitor-provided facts and the agency qualification rubric.",
-    inputSchema: leadSchema,
-    execute: async (input) => scoreLead(input),
-  }),
-};
 
 export async function POST(request: Request) {
   const origin = request.headers.get("origin");
@@ -67,9 +58,10 @@ export async function POST(request: Request) {
         { status: 400 },
       );
     }
-    const messages = await validateUIMessages<
-      UIMessage<unknown, UIDataTypes, InferUITools<typeof tools>>
-    >({ messages: body.messages, tools });
+    const messages = await validateUIMessages<LeadMessage>({
+      messages: body.messages,
+      tools,
+    });
     if (
       messages.at(-1)?.role !== "user" ||
       messages.some((message) => message.role === "system")

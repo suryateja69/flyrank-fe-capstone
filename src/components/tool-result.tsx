@@ -3,6 +3,9 @@ import { ScoreCard } from "./score-card";
 
 export type ToolState =
   "input-streaming" | "input-available" | "output-available" | "output-error";
+export function isToolState(value: unknown): value is ToolState {
+  return value === "input-streaming" || value === "input-available" || value === "output-available" || value === "output-error";
+}
 export function ToolResult({
   state,
   input,
@@ -14,21 +17,28 @@ export function ToolResult({
 }) {
   if (state === "input-streaming")
     return (
-      <div className="tool-status" role="status">
+      <div className="tool-status tool-collecting" role="status">
         <span className="pulse" />
-        Collecting project details…
+        <strong>Collecting project details…</strong>
+        <p>The assistant is preparing the scoring inputs. No score is available yet.</p>
+        <div className="tool-skeleton" aria-hidden="true"><span /><span /><span /></div>
       </div>
     );
   if (state === "input-available") {
     const parsed = leadSchema.safeParse(input);
     return (
-      <div className="tool-status" role="status">
+      <div className="tool-status tool-executing" role="status">
         <strong>Scoring the inquiry</strong>
-        <p>
-          {parsed.success
-            ? `Reviewing ${parsed.data.company} against budget, timing, and purchasing authority.`
-            : "Validating the supplied project details."}
-        </p>
+        {parsed.success ? (
+          <dl className="tool-input-summary">
+            <div><dt>Business</dt><dd>{parsed.data.company}</dd></div>
+            <div><dt>Project</dt><dd>{parsed.data.project}</dd></div>
+            <div><dt>Budget</dt><dd>{parsed.data.budget === "unknown" ? "Not provided" : parsed.data.budget}</dd></div>
+            <div><dt>Timing</dt><dd>{parsed.data.timeline}</dd></div>
+            <div><dt>Purchasing authority</dt><dd>{parsed.data.decisionMaker ? "Confirmed" : "Unconfirmed"}</dd></div>
+          </dl>
+        ) : <p>Validating the supplied project details. Incomplete input cannot be scored.</p>}
+        <p className="tool-execution-note"><span className="pulse" /> Applying the server-side rubric…</p>
       </div>
     );
   }

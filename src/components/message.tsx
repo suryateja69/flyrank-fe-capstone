@@ -1,7 +1,7 @@
-import type { UIMessage } from "ai";
-import { ToolResult } from "./tool-result";
+import type { LeadMessage } from "@/lib/tools";
+import { ToolResult, isToolState } from "./tool-result";
 
-export function Message({ message }: { message: UIMessage }) {
+export function Message({ message }: { message: LeadMessage }) {
   return (
     <article
       className={`message ${message.role}`}
@@ -25,23 +25,12 @@ export function Message({ message }: { message: UIMessage }) {
         ) {
           if (
             "state" in part &&
-            [
-              "input-streaming",
-              "input-available",
-              "output-available",
-              "output-error",
-            ].includes(part.state)
+            isToolState(part.state)
           ) {
             return (
               <ToolResult
                 key={index}
-                state={
-                  part.state as
-                    | "input-streaming"
-                    | "input-available"
-                    | "output-available"
-                    | "output-error"
-                }
+                state={part.state}
                 input={"input" in part ? part.input : undefined}
                 output={"output" in part ? part.output : undefined}
               />

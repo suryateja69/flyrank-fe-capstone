@@ -106,3 +106,19 @@ AI generated both implementation and tests. A person should review the code and 
 ## License
 
 MIT. Adapted shadcn/ui reference source is also MIT. Its copyright notice is retained in `docs/THIRD_PARTY_LICENSES.md`.
+
+## Qualification tool contract (FE07)
+
+Definition: [`src/lib/tools.ts`](src/lib/tools.ts), registered as `qualifyLead` in the server chat route. `inputSchema` and `outputSchema` are Zod schemas from `src/lib/qualification.ts`. Execution validates input, applies the deterministic rubric, and validates the returned result. No external mutation, booking, email, or confirmation action occurs.
+
+| Input field | Contract |
+| --- | --- |
+| company | Trimmed string, 2–100 characters |
+| project | Trimmed string, 10–1000 characters |
+| budget | under-5k, 5k-15k, 15k-plus, unknown |
+| timeline | this-month, this-quarter, exploring, unknown |
+| decisionMaker | Boolean; true only for confirmed purchasing authority |
+
+The returned object contains all validated input fields plus `score` (integer 0–100), `category` (Priority, Nurture, Discovery), `reasons` (up to 10 strings), and `nextAction` (string). Budget adds 0/10/30/40, timing 0/5/20/30, confirmed authority 20, and a stated project 10. Scores at least 70 are Priority; 40–69 Nurture; below 40 Discovery.
+
+The UI renders input-streaming as a preparation skeleton, input-available as a labeled input summary with execution feedback, output-available as a score card, and output-error as an alert with recovery guidance. Untrusted result data is validated before display. `/playground/tools` contains clearly labeled sample fixtures for all four states; `/discovery` runs the real server tool through Gemini. Fixtures do not claim a real execution failure or provider call. See [FE07 evidence](docs/FE07.md).

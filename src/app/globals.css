@@ -1364,3 +1364,16 @@ body {
     transform: translateY(0);
   }
 }
+
+/* Tool lifecycle: preparation skeleton, validated input review, result card, error. */
+.tool-collecting { border-style: dashed; background: #f1f4f0; }
+.tool-skeleton { display: grid; gap: 8px; margin-top: 12px; }
+.tool-skeleton span { display: block; height: 8px; border-radius: 4px; background: #d5dfd5; }
+.tool-skeleton span:nth-child(2) { width: 72%; }
+.tool-skeleton span:nth-child(3) { width: 44%; }
+.tool-executing { border-left: 4px solid var(--green); background: #edf6e9; }
+.tool-input-summary { display: grid; gap: 8px; margin: 12px 0; }
+.tool-input-summary div { display: grid; grid-template-columns: minmax(90px, 1fr) 2fr; gap: 12px; }
+.tool-input-summary dt { font-weight: 600; }
+.tool-input-summary dd { margin: 0; overflow-wrap: anywhere; }
+.tool-execution-note { display: flex; align-items: center; gap: 8px; }

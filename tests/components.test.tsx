@@ -79,8 +79,7 @@ describe("Qualification", () => {
           role: "assistant",
           parts: [
             {
-              type: "dynamic-tool",
-              toolName: "qualifyLead",
+              type: "tool-qualifyLead",
               toolCallId: "call-1",
               state: "output-available",
               input,

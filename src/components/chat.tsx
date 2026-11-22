@@ -1,13 +1,14 @@
 "use client";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
+import type { LeadMessage } from "@/lib/tools";
 import { z } from "zod";
 import { ArrowDown, ArrowUp, Square, Sparkles, RotateCcw } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Message } from "./message";
 
 const errorSchema = z.object({ error: z.string().max(1000) });
-const transport = new DefaultChatTransport({
+const transport = new DefaultChatTransport<LeadMessage>({
   api: "/api/chat",
   fetch: async (input, init) => {
     const response = await fetch(input, init);
@@ -34,7 +35,7 @@ export function Chat() {
     regenerate,
     setMessages,
     clearError,
-  } = useChat({ transport });
+  } = useChat<LeadMessage>({ transport });
   const [input, setInput] = useState("");
   const [atBottom, setAtBottom] = useState(true);
   const [notice, setNotice] = useState("");

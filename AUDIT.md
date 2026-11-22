@@ -48,7 +48,7 @@ All four routes met the 90-point target after deployment. These are single-run d
 
 ## WAVE findings and changes
 
-Historical narrow-viewport WAVE extension counts supplied with the FE-10 handoff. The FlyRank sign-in requirement prevented direct comparison with the current submission attachment.
+Historical narrow-viewport WAVE extension counts were confirmed against the original FlyRank submission ZIP. The updated GitHub audit supersedes that ZIP.
 
 | Route | Errors | Contrast errors | Alerts |
 | --- | ---: | ---: | ---: |
@@ -81,4 +81,4 @@ The after-deployment keyboard pass repeated navigation and Send, returned a Prio
 
 ## Completion status
 
-The production fix, mobile Lighthouse reruns, and keyboard rerun are verified. WAVE extension reruns and the update to the existing FlyRank submission remain outstanding. FlyRank still shows a sign-in error for the prior one-time code.
+The production fix, mobile Lighthouse reruns, and keyboard rerun are verified. FlyRank saved the update to the [existing FE-10 submission](https://internship.flyrank.ai/intern/assignments/FE-10) on 22 November 2026 and displays **Assignment submitted**, awaiting review. The post-fix WAVE extension rerun remains unverified.

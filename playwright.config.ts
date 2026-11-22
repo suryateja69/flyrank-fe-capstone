@@ -10,7 +10,10 @@ export default defineConfig({
       executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE,
     },
   },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  projects: [
+    { name: "chromium", use: { ...devices["Desktop Chrome"] } },
+    { name: "mobile-webkit", testMatch: /edges.spec.ts/, use: { ...devices["iPhone 13"], launchOptions: {} } },
+  ],
   webServer: {
     command: process.env.CI ? "npm start" : "npm run dev",
     url: "http://127.0.0.1:3000",

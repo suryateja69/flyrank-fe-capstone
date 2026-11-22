@@ -26,7 +26,7 @@ export async function POST(request: Request) {
   if (!takeRateLimit("global") || !takeRateLimit(ip)) {
     return Response.json(
       { error: "Too many requests. Wait a minute and try again." },
-      { status: 429 },
+      { status: 429, headers: { "Retry-After": "60" } },
     );
   }
   const raw = await request.text();
@@ -44,6 +44,7 @@ export async function POST(request: Request) {
       { status: 503 },
     );
   }
+  let messages: LeadMessage[];
   try {
     const body: unknown = JSON.parse(raw);
     if (
@@ -58,7 +59,7 @@ export async function POST(request: Request) {
         { status: 400 },
       );
     }
-    const messages = await validateUIMessages<LeadMessage>({
+    messages = await validateUIMessages<LeadMessage>({
       messages: body.messages,
       tools,
     });
@@ -71,6 +72,13 @@ export async function POST(request: Request) {
         { status: 400 },
       );
     }
+  } catch {
+    return Response.json(
+      { error: "We could not process that conversation. Please try a shorter message." },
+      { status: 400 },
+    );
+  }
+  try {
     const result = streamText({
       model: google(MODEL),
       system: SYSTEM_PROMPT,
@@ -94,9 +102,9 @@ export async function POST(request: Request) {
     return Response.json(
       {
         error:
-          "We could not process that conversation. Please try a shorter message.",
+          "The AI service is temporarily unavailable. Please retry shortly.",
       },
-      { status: 400 },
+      { status: 503 },
     );
   }
 }

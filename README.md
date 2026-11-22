@@ -122,3 +122,7 @@ Definition: [`src/lib/tools.ts`](src/lib/tools.ts), registered as `qualifyLead` 
 The returned object contains all validated input fields plus `score` (integer 0–100), `category` (Priority, Nurture, Discovery), `reasons` (up to 10 strings), and `nextAction` (string). Budget adds 0/10/30/40, timing 0/5/20/30, confirmed authority 20, and a stated project 10. Scores at least 70 are Priority; 40–69 Nurture; below 40 Discovery.
 
 The UI renders input-streaming as a preparation skeleton, input-available as a labeled input summary with execution feedback, output-available as a score card, and output-error as an alert with recovery guidance. Untrusted result data is validated before display. `/playground/tools` contains clearly labeled sample fixtures for all four states; `/discovery` runs the real server tool through Gemini. Fixtures do not claim a real execution failure or provider call. See [FE07 evidence](docs/FE07.md).
+
+## Checkpoint 1 — resilient discovery (FE08)
+
+[Failure inventory and sabotage checklist](docs/FE08.md) covers network loss, interrupted streams, provider errors, rate limits, slow and empty responses, incomplete/malformed tool results, and useful first-run states. Retry regenerates only the last assistant response and preserves visitor messages. Error bodies stay private. The browser suite exercises the same chat UI in Chromium and mobile WebKit, including screenshots of success and handled failures.

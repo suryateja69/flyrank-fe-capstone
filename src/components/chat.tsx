@@ -1,31 +1,15 @@
 "use client";
 import { useChat } from "@ai-sdk/react";
-import { DefaultChatTransport } from "ai";
 import type { LeadMessage } from "@/lib/tools";
-import { z } from "zod";
 import { ArrowDown, ArrowUp, Square, Sparkles, RotateCcw } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Message } from "./message";
 
-const errorSchema = z.object({ error: z.string().max(1000) });
-const transport = new DefaultChatTransport<LeadMessage>({
-  api: "/api/chat",
-  fetch: async (input, init) => {
-    const response = await fetch(input, init);
-    if (!response.ok) {
-      const parsed = errorSchema.safeParse(
-        await response.json().catch(() => null),
-      );
-      throw new Error(
-        parsed.success
-          ? parsed.data.error
-          : "The request failed. Please retry shortly.",
-      );
-    }
-    return response;
-  },
-});
+import { transport, chatErrorMessage, hasReadableContent } from "@/lib/chat-transport";
+
 export function Chat() {
+  const [recovery, setRecovery] = useState("");
+  const [slow, setSlow] = useState(false);
   const {
     messages,
     sendMessage,
@@ -35,7 +19,14 @@ export function Chat() {
     regenerate,
     setMessages,
     clearError,
-  } = useChat<LeadMessage>({ transport });
+  } = useChat<LeadMessage>({
+    transport,
+    onFinish: ({ message, isAbort, isError }) => {
+      if (!isAbort && !isError && !hasReadableContent(message)) {
+        setRecovery("The assistant returned no usable response. Retry the last response, or add more project details.");
+      }
+    },
+  });
   const [input, setInput] = useState("");
   const [atBottom, setAtBottom] = useState(true);
   const [notice, setNotice] = useState("");
@@ -43,11 +34,17 @@ export function Chat() {
   const pending = status === "submitted" || status === "streaming";
   const busy = useRef(false);
   const latest = messages.at(-1);
+  const failure = error ? chatErrorMessage(error) : recovery;
   // The stream can open before its first visible text/tool part arrives.
   const thinking = pending && (latest?.role !== "assistant" || !latest.parts.some(
     (part) => (part.type === "text" && part.text.trim().length > 0) ||
       part.type === "tool-qualifyLead" || part.type === "dynamic-tool",
   ));
+  useEffect(() => {
+    if (!pending) { setSlow(false); return; }
+    const timer = window.setTimeout(() => setSlow(true), 8000);
+    return () => window.clearTimeout(timer);
+  }, [pending]);
   const jump = () => {
     if (list.current) list.current.scrollTop = list.current.scrollHeight;
     setAtBottom(true);
@@ -70,8 +67,11 @@ export function Chat() {
     busy.current = true;
     clearError();
     setNotice("");
+    setRecovery("");
     setAtBottom(true);
-    void sendMessage({ text: input.trim() }).finally(() => {
+    void sendMessage({ text: input.trim() }).catch(() => {
+      setRecovery("The request could not finish. Retry the last response.");
+    }).finally(() => {
       busy.current = false;
     });
     setInput("");
@@ -96,6 +96,7 @@ export function Chat() {
             setMessages([]);
             clearError();
             setNotice("");
+            setRecovery("");
             setInput("");
           }}
         >
@@ -152,16 +153,21 @@ export function Chat() {
           </div>
         )}
         {messages.map((message) => (
-          <Message key={message.id} message={message} />
+          <Message key={message.id} message={message} streaming={pending && latest?.id === message.id} />
         ))}
         {thinking && (
-          <p className="thinking" role="status">
-            <span className="pulse" /> Thinking about your project…
-          </p>
+          <div className="reply-skeleton" role="status">
+            <p className="thinking"><span className="pulse" /> Thinking about your project…</p>
+            <div className="skeleton" aria-hidden="true" />
+            <div className="skeleton" aria-hidden="true" />
+          </div>
         )}
       </div>
+      {slow && pending && <p className="slow-notice" role="status">This is taking longer than usual. You can stop generation and try again; your conversation will stay here.</p>}
       <div className="sr-only" role="status" aria-live="polite">
-        {thinking
+        {failure
+          ? "Response failed. Retry last response is available."
+          : thinking
           ? "Assistant is thinking."
           : status === "streaming"
             ? "Assistant is responding. Stop generation is available."
@@ -174,18 +180,22 @@ export function Chat() {
           <ArrowDown size={14} /> Jump to latest
         </button>
       )}
-      {error && (
+      {failure && (
         <div className="error-box" role="alert" aria-label="Conversation error">
-          <p>
-            {error.message || "The response was interrupted. Please retry."}
-          </p>
+          <strong>Response needs another try</strong>
+          <p>{failure}</p>
+          <p>Your messages and any partial response are still here. Retry only the last response.</p>
           <button
             disabled={pending}
             onClick={() => {
               if (busy.current) return;
               busy.current = true;
               clearError();
-              void regenerate().finally(() => {
+              setRecovery("");
+              setAtBottom(true);
+              void regenerate().catch(() => {
+                setRecovery("The request could not finish. Retry the last response.");
+              }).finally(() => {
                 busy.current = false;
               });
             }}
@@ -215,6 +225,7 @@ export function Chat() {
           placeholder="Tell us a little about your project…"
           value={input}
           maxLength={2000}
+          aria-describedby="composer-count"
           onChange={(event) => setInput(event.target.value)}
           onKeyDown={(event) => {
             if (
@@ -228,7 +239,7 @@ export function Chat() {
           }}
         />
         <div className="composer-footer">
-          <span>Keep private or sensitive details out of chat.</span>
+          <span id="composer-count">{input.length}/2,000 · Keep private details out of chat.</span>
           {pending ? (
             <button
               type="button"

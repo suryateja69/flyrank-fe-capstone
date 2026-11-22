@@ -1,7 +1,7 @@
 import type { LeadMessage } from "@/lib/tools";
 import { ToolResult, isToolState } from "./tool-result";
 
-export function Message({ message }: { message: LeadMessage }) {
+export function Message({ message, streaming = false }: { message: LeadMessage; streaming?: boolean }) {
   return (
     <article
       className={`message ${message.role}`}
@@ -30,7 +30,7 @@ export function Message({ message }: { message: LeadMessage }) {
             return (
               <ToolResult
                 key={index}
-                state={part.state}
+                state={!streaming && (part.state === "input-streaming" || part.state === "input-available") ? "output-error" : part.state}
                 input={"input" in part ? part.input : undefined}
                 output={"output" in part ? part.output : undefined}
               />

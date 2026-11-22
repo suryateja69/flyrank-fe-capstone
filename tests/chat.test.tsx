@@ -65,7 +65,7 @@ it("renders an error and retries the failed response", async () => {
   mocks.error = new Error("Connection interrupted");
   const user = userEvent.setup();
   render(<Chat />);
-  expect(screen.getByRole("alert")).toHaveTextContent("Connection interrupted");
+  expect(screen.getByRole("alert")).toHaveTextContent("Check your internet connection");
   await user.click(screen.getByRole("button", { name: "Retry last response" }));
   expect(mocks.regenerate).toHaveBeenCalledOnce();
 });

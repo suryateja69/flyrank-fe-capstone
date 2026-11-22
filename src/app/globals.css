@@ -1377,3 +1377,26 @@ body {
 .tool-input-summary dt { font-weight: 600; }
 .tool-input-summary dd { margin: 0; overflow-wrap: anywhere; }
 .tool-execution-note { display: flex; align-items: center; gap: 8px; }
+
+/* Recovery stays in the page flow, so narrow screens can scroll to the composer. */
+.message-list { min-height: 0; }
+.chat-header, .composer, .chat-fineprint, .chat-panel > .error-box, .slow-notice { flex-shrink: 0; }
+.reply-skeleton { min-height: 96px; padding: 14px 15px; border-radius: 12px; background: #f4f7ee; }
+.reply-skeleton .skeleton { height: 9px; max-width: 85%; margin-top: 9px; }
+.reply-skeleton .skeleton:last-child { max-width: 56%; }
+.slow-notice { color: #52634f; font-size: 12px; margin: 8px 18px; }
+.error-box { overflow-wrap: anywhere; }
+.error-box button, .send-button, .icon-button { min-width: 44px; min-height: 44px; }
+@media (max-width: 760px) {
+  .chat-panel { height: min(740px, calc(100svh - 32px)); min-height: 430px; max-height: none; }
+  .composer textarea { font-size: 16px; scroll-margin-bottom: 24px; }
+  .composer { padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+  .message.user { margin-left: 12px; }
+  .message-list { -webkit-overflow-scrolling: touch; }
+}
+.reply-skeleton { background: #f4f7ee; border-radius: 12px; padding: 16px; min-height: 115px; }
+.reply-skeleton .skeleton { height: 10px; width: 86%; margin-top: 12px; }
+.reply-skeleton .skeleton:last-child { width: 60%; }
+.slow-notice { color: #52634f; padding: 8px 18px; font-size: 12px; margin: 0; }
+.chat-header, .composer, .chat-fineprint, .chat-panel > .error-box, .slow-notice { flex-shrink: 0; }
+.message-list { min-height: 100px; }

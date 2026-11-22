@@ -1,73 +1,103 @@
 # LeadDesk
 
-LeadDesk helps a small agency qualify an incoming website or app inquiry. A guided AI conversation gathers the visitor’s business need, budget, timing, and purchasing authority. A typed server tool produces an explainable score and a suggested next action for a person to review.
+An AI-assisted project discovery workspace by Surya Teja. Visitors describe a website or app project; a streaming assistant gathers requirements and calls a typed qualification tool. The resulting score explains its reasoning and suggests a next action for a person to review.
 
-Built for Surya Teja’s FlyRank Front-end AI Engineering internship.
+**Production:** https://leaddesk-capstone.vercel.app/  
+**Try discovery:** https://leaddesk-capstone.vercel.app/discovery
 
-![LeadDesk overview captured in the browser test](docs/screenshots/overview.png)
+![Workspace overview](docs/screenshots/overview.png)
+![Discovery result from an earlier live verification](docs/screenshots/FE08/live-happy.jpg)
+![Recoverable error state](docs/screenshots/recoverable-error.png)
 
-## Current status
+## Run from a fresh clone
 
-The application code, accessible component playground, WebGL experiments, unit tests, and CI workflow are implemented. The production build, 19 unit/component tests, mocked end-to-end flow, and phone/desktop axe and overflow checks have passed in GitHub Actions at commit 07b9086. Live provider verification, deployment, the deployed performance audit, and FlyRank submissions still need completion. This repository is a work in progress.
-
-## Run locally
-
-Requires Node.js 24 LTS and npm. From this repository:
+Requires Node.js 24 LTS, Git, and npm.
 
 ```bash
+git clone https://github.com/suryateja69/flyrank-fe-capstone.git
+cd flyrank-fe-capstone
 npm ci
 cp .env.example .env.local
 npm run dev
 ```
 
-Open http://localhost:3000. On Windows, use Git Bash for the copy command, or copy `.env.example` to `.env.local` in File Explorer.
+Open http://localhost:3000. Windows users can run these commands in Git Bash, or copy `.env.example` to `.env.local` with File Explorer. Set the provider key in `.env.local` before testing live chat. Never commit that file.
 
-Add a Google AI provider key to `.env.local` to enable real AI responses. Without it the interface remains navigable and the chat shows an explicit configuration error. Sample data on `/playground/tools` demonstrates tool states independently of the AI provider. It is labeled as sample data.
+Without a key, navigation and sample tool fixtures work; chat displays a recoverable configuration error. For a production build locally:
 
-## Environment variables
+```bash
+npm run build
+npm start
+```
 
-| Name | Required | Purpose |
+## Environment
+
+| Variable | Required | Default / purpose |
 | --- | --- | --- |
-| `GOOGLE_GENERATIVE_AI_API_KEY` | For live chat | Server-only Google AI provider credential. Keep in `.env.local` or the deployment host’s secret settings. |
-| `AI_MODEL` | Optional | Defaults to `gemini-2.5-flash`. Select a model available to your provider account. |
+| GOOGLE_GENERATIVE_AI_API_KEY | Live chat only | Server-only Gemini credential; configure locally or in Vercel Production secrets. Never use a NEXT_PUBLIC_ prefix. |
+| AI_MODEL | No | gemini-2.5-flash; override with a model available to your account. |
+
+No database, OAuth application, or browser API key is required.
+
+## Use the primary flow
+
+Open Project discovery, describe your company and project, then provide budget, timeline, and purchasing authority when asked. The assistant streams a reply and invokes `qualifyLead` once it has the needed facts. Review the score, reasons, and suggested action. Stop generation interrupts a response; Retry recovers from errors; Start a new conversation clears the current session.
+
+A fictional deployment smoke test on 22 November 2026 used Example Studio, a customer booking application, a $20,000 budget, launch this month, and confirmed decision-making authority. The production provider returned the typed Priority card with score 100 and a human-review suggestion. No booking or outreach occurred.
+
+## Architecture
+
+| Layer | Responsibility |
+| --- | --- |
+| Next.js App Router | Route shells, server API handlers and production rendering |
+| React client components | Chat state, forms, accessible widgets and visual experiments |
+| AI SDK + Google provider | Validated messages, streaming response and typed tool parts |
+| Zod + deterministic qualification | Input/output contracts and explainable scoring |
+| Shared CSS + Tailwind | Responsive layout, focus treatment and reduced-motion styles |
+| GitHub Actions + Vercel | Automated checks and Git-connected deployment |
+
+Request path: browser `useChat` → `POST /api/chat` → origin/rate/size/message validation → Gemini `streamText` → `qualifyLead` → typed stream → validated result card.
+
+The tool accepts company, project, budget, timeline and decisionMaker. Budget contributes up to 40 points, timing up to 30, authority 20, and a stated need 10. Scores 70+ are Priority, 40–69 Nurture, and below 40 Discovery. The tool validates its output and has no external side effects.
+
+## Decisions and scope
+
+- Server-only credentials prevent provider secrets reaching the browser.
+- Deterministic tool scoring makes recommendations explainable instead of asking the model to invent a score.
+- Typed stream parts show preparation, input review, result and recoverable failure states.
+- Workspace preferences stay in localStorage and are excluded from model requests.
+- Conversations live in the current tab and clear on refresh; submitted chat text goes to the configured AI provider.
+- No CRM integration, database, authentication, automatic email or meeting booking is claimed.
+- Procedural WebGL avoids large 3D assets. Pixel ratio is capped at 1.5, hidden tabs pause rendering, and reduced motion/unavailable WebGL use a static fallback.
+
+## Production hygiene
+
+The chat route rejects foreign origins, caps the request at 32,000 characters and the conversation at 20 messages, rejects system-role injection, validates AI SDK message structure, and restricts generation to 800 output tokens and three steps. The UI caps each new visitor message at 2,000 characters.
+
+Per-instance rate limiting allows 10 requests per client key and 60 globally per minute, returning 429 with Retry-After. The streaming handler exports `maxDuration = 30`, applies a 25-second abort timeout, and propagates client cancellation.
+
+The in-memory limiter resets on cold starts and is not shared across server instances; it is a baseline, not a distributed spending guarantee. Host WAF rules and provider spending quotas are recommended; this README does not claim they are configured. Errors shown to visitors omit provider internals.
+
+## Deployment and rollback
+
+Vercel hosts the public production domain above. The repository's main branch is connected to production deployment. In Vercel, import the repository with the Next.js preset, set the environment variables for Production, and deploy. Changing environment variables requires a new deployment.
+
+After deployment, check the overview, discovery, settings and health pages; send a fictional project and confirm a streamed response and result card. Inspect build/runtime logs if a request fails. Roll back using a previously Ready deployment in the Vercel dashboard if needed. A custom domain is optional; the supplied vercel.app domain uses HTTPS.
 
 ## Routes
 
 | Route | Purpose |
 | --- | --- |
-| `/` | Workspace overview |
-| `/discovery` | Streaming project-discovery conversation |
-| `/settings` | Validated, device-local workspace preferences |
-| `/about` | Scoring, privacy, and product scope |
-| `/health` | Server-rendered fetch of `/api/health` |
-| `/playground` | Custom modal, tabs, disclosure, shadcn references, and stateful button |
-| `/playground/tools` | Four labeled tool-state fixtures |
-| `/playground/3d` | Lazy-loaded procedural WebGL cube with color and rotation controls |
-| `/playground/shader` | Custom GLSL hero with time, resolution, and pointer uniforms |
-
-## Architecture
-
-Next.js App Router supplies server-rendered route shells and server-only API handlers. React client components own conversation state, forms, keyboard widgets, and visual experiments. Tailwind and shared CSS tokens style the interface. Geist is bundled locally.
-
-`src/app/api/chat/route.ts` validates messages, enforces size and request limits, and calls the Google provider through AI SDK `streamText`. `src/lib/ai-config.ts` holds the model and system prompt. The system prompt asks one question at a time, collects supplied facts, and calls a qualification tool. `src/lib/qualification.ts` contains the Zod schema and deterministic scoring rubric. `src/components/chat.tsx` uses `useChat` to consume typed stream parts, stop generation, retain partial responses, and retry failures.
-
-The app does not claim to book meetings, email leads, or store a CRM record. Conversation state lasts for the current tab lifetime and clears on refresh. Chat text is transmitted to the configured AI provider. Workspace preference fields stay in localStorage and are excluded from model requests.
-
-## Tool contract
-
-**Name** `qualifyLead`
-
-| Input | Type |
-| --- | --- |
-| `company` | Trimmed string, 2–100 characters |
-| `project` | Trimmed string, 10–1,000 characters |
-| `budget` | `under-5k`, `5k-15k`, `15k-plus`, or `unknown` |
-| `timeline` | `this-month`, `this-quarter`, `exploring`, or `unknown` |
-| `decisionMaker` | Boolean confirmed by the visitor |
-
-Returns those fields plus `score` (0–100), `category` (`Priority`, `Nurture`, or `Discovery`), `reasons` (string array), and `nextAction` (string).
-
-Budget contributes 0–40, timing 0–30, authority 0 or 20, and a stated need 10 points. Thresholds are 70 for Priority and 40 for Nurture. The four tool states show collection progress, supplied input under review, a result card, or a recoverable error. Client rendering checks the result shape before showing it.
+| / | Overview |
+| /discovery | Live streaming qualification |
+| /settings | Device-local workspace preferences |
+| /about | Scoring, privacy and scope |
+| /health | API health display |
+| /playground | Accessible component examples |
+| /playground/tools | Explicitly labeled sample tool states |
+| /playground/buttons | Simulated save micro-interactions |
+| /playground/3d | Procedural cube configurator |
+| /playground/shader | Personalized GLSL hero |
 
 ## Verification
 
@@ -75,60 +105,30 @@ Budget contributes 0–40, timing 0–30, authority 0 or 20, and a stated need 1
 npm run typecheck
 npm run test:coverage
 npm run build
-npx playwright install chromium
+npx playwright install chromium webkit
 npm run test:e2e
 ```
 
-Unit/component tests mock chat and never call a live provider. The Playwright primary-flow test supplies a mock AI SDK stream, checks typed result rendering, injects a 503, and checks retry. The axe test checks key pages at 375 px and 1280 px. CI runs checks on pushes and pull requests. See `docs/VERIFICATION.md` for measured results and limitations.
+Unit/component and end-to-end fixtures mock AI responses and do not spend provider credits. The browser configuration includes desktop Chromium and selected mobile WebKit cases. WebKit emulation does not certify real iPhone Safari.
 
-## Deployment
+TypeScript and the production build passed during the Week 8 shader update. The deployed discovery flow was verified with a real provider response on 22 November 2026 in Chrome. Firefox, desktop Safari and physical mobile Safari were not available in the review browser and are **not claimed as tested**. WAVE and the full FE-10 audit remain separate unfinished verification; Lighthouse alone does not prove accessibility. Existing screenshots are labeled evidence from earlier checks, not new cross-browser evidence.
 
-Import this repo into Vercel as a Next.js application, configure the server-only provider key, and deploy. The health page fetches its same-origin API in the browser, including on protected previews. Git-connected deployment should create a preview per change. Follow `docs/DEPLOYMENT.md`; deployment has not been claimed complete.
+## How AI tools built this
 
-The route limits conversation length, request size, output tokens, step count, and time. Its per-instance rate limiter is a baseline; a public deployment should also enable a host-level WAF/rate rule and provider spending/quota controls. In-memory rate windows reset on cold starts and are not shared across instances.
+Codex in ChatGPT Work generated the Next.js/React implementation, tool schemas, deterministic rubric, streaming UI, component states, GLSL renderer, tests and documentation with the user's authorization. It reviewed FlyRank's briefs and changed an initial storefront direction into a project-discovery workspace matching the streaming/tool requirements.
 
-## AI-assisted work
+A concrete verification-driven fix changed the custom dialog's grouped focus selector to a single `:is(...)` selector so document order was preserved and Shift+Tab stayed inside the modal. The tool UI validates malformed results rather than trusting generated data. The shader update changed a 70dvh stage to a minimum 100dvh and removed the constrained page wrapper. For this production task, Codex exercised a fictional live qualification and replaced stale deployment claims with this runnable README.
 
-Codex implemented the project in ChatGPT Work with the user’s authorization. The initial storefront placeholder was replaced after reading FlyRank’s current streaming-chat and tool-calling requirements. The AI reviewed the README and added runnable setup instructions, the environment table, route mapping, tool contract, and explicit completion status.
+AI also wrote tests, so passing tests are evidence with limits, not independent human review. Surya should understand the code before a mentor walkthrough. No mentor acceptance, personal course completion, or unperformed device testing is asserted.
 
-Verification caught an accessibility regression: a grouped focusable-element selector returned an unexpected order in the test DOM, allowing Shift+Tab to leave the custom dialog. Changing the selector to a single `:is(...)` predicate preserved document order and made the regression test pass. Tests also verify invalid form descriptions, unknown qualification fields, partial streamed text, and malformed tool output.
+## Supporting documentation
 
-AI generated both implementation and tests. A person should review the code and understand it before presenting it as their work. No personal study completion, time measurements, user research, live API success, or mentor acceptance is asserted here.
-
-## Known limitations
-
-- No authenticated multi-user workspace, database, CRM delivery, or booking service.
-- Live AI requires a valid provider key and account quota; it is currently unverified.
-- The automated streaming fixture is immediate. Real token timing, stop/re-send, mobile Safari behavior, WAVE, deployed Lighthouse, and cross-browser checks still require evidence.
-- Two independent workflow-drill branches, the separate session-inspired React exercise, and AI Fluency course/personal-work evidence remain separate assignment work.
-- Visual WebGL demos use procedural geometry (432 bytes of vertex data), cap pixel ratio at 1.5, stop hidden-tab rendering, and offer reduced-motion/static fallbacks. Device frame rate and deployed bundle impact are not yet measured.
+- [Tool contract and states](docs/FE07.md)
+- [Error and recovery inventory](docs/FE08.md)
+- [Button motion and states](docs/FE-AA1.md)
+- [Shader walkthrough and fallback](docs/FE-AA3.md)
+- [Earlier verification record](docs/VERIFICATION.md)
 
 ## License
 
-MIT. Adapted shadcn/ui reference source is also MIT. Its copyright notice is retained in `docs/THIRD_PARTY_LICENSES.md`.
-
-## Qualification tool contract (FE07)
-
-Definition: [`src/lib/tools.ts`](src/lib/tools.ts), registered as `qualifyLead` in the server chat route. `inputSchema` and `outputSchema` are Zod schemas from `src/lib/qualification.ts`. Execution validates input, applies the deterministic rubric, and validates the returned result. No external mutation, booking, email, or confirmation action occurs.
-
-| Input field | Contract |
-| --- | --- |
-| company | Trimmed string, 2–100 characters |
-| project | Trimmed string, 10–1000 characters |
-| budget | under-5k, 5k-15k, 15k-plus, unknown |
-| timeline | this-month, this-quarter, exploring, unknown |
-| decisionMaker | Boolean; true only for confirmed purchasing authority |
-
-The returned object contains all validated input fields plus `score` (integer 0–100), `category` (Priority, Nurture, Discovery), `reasons` (up to 10 strings), and `nextAction` (string). Budget adds 0/10/30/40, timing 0/5/20/30, confirmed authority 20, and a stated project 10. Scores at least 70 are Priority; 40–69 Nurture; below 40 Discovery.
-
-The UI renders input-streaming as a preparation skeleton, input-available as a labeled input summary with execution feedback, output-available as a score card, and output-error as an alert with recovery guidance. Untrusted result data is validated before display. `/playground/tools` contains clearly labeled sample fixtures for all four states; `/discovery` runs the real server tool through Gemini. Fixtures do not claim a real execution failure or provider call. See [FE07 evidence](docs/FE07.md).
-
-## Checkpoint 1 — resilient discovery (FE08)
-
-[Failure inventory and sabotage checklist](docs/FE08.md) covers network loss, interrupted streams, provider errors, rate limits, slow and empty responses, incomplete/malformed tool results, and useful first-run states. Retry regenerates only the last assistant response and preserves visitor messages. Error bodies stay private. The browser suite exercises the same chat UI in Chromium and mobile WebKit, including screenshots of success and handled failures.
-
-## Buttons with a Brain (Week 6 · FE-AA1)
-
-Live demo: https://leaddesk-capstone.vercel.app/playground/buttons — select **Force success** or **Force failure**, then activate the save button. A disable toggle and reset control make the remaining cases inspectable. The save is explicitly simulated; it sends no data and requires no provider key.
-
-The reusable [StateButton](src/components/state-button.tsx) covers idle, hover/focus, press, loading, success, error/retry, disabled, and return to idle. Hover/press use 120ms ease-out for prompt acknowledgement. State faces crossfade and shift 4px over 200ms with cubic-bezier(.2,.8,.2,1), while a single 240ms nudge marks an error. Success holds 1.8s, error 3.2s, then the button returns to idle; the result text persists. Fixed dimensions avoid layout shifts, and only transform/opacity animate. Reduced motion removes animation while keeping all feedback and keyboard focus. [Requirements and verification](docs/FE-AA1.md).
+MIT. Adapted shadcn/ui reference code retains its notice in [third-party licenses](docs/THIRD_PARTY_LICENSES.md).

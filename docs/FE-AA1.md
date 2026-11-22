@@ -32,4 +32,15 @@ Source: src/components/state-button.tsx, src/components/button-demo.tsx, and the
 
 ## Validation
 
-Local TypeScript and all 43 unit/component tests passed. Production build generated the demo page successfully. Browser CI and deployment verification will be recorded after release. Unit tests cover duplicate activation, success/idle, retry during the error dwell, stale-timer prevention, disabled activation, cancellation, forced failure, and reset. Browser tests cover real Tab/Enter/Space, stable dimensions, forced failure/retry, hover, reduced motion, axe accessibility, and phone layout in Chromium and mobile WebKit.
+Verified on 22 November 2026: TypeScript, all 43 unit/component tests, production build, and all 21 browser tests passed in [CI run 45005603493](https://github.com/suryateja69/flyrank-fe-capstone/actions/runs/45005603493). This includes real Tab/Enter/Space activation, duplicate-event protection, forced error/retry, stable dimensions, reduced motion, axe checks, and iPhone 13 mobile WebKit emulation. A physical iPhone was not used.
+
+The public Production deployment reached READY: https://leaddesk-capstone-e2hba8g8m-badboysuryatej-9407.vercel.app/playground/buttons . Its loading, success, and failure transitions were manually exercised through the live controls. No credentials or provider API are required by the demo. Unit tests cover duplicate activation, success/idle, retry during the error dwell, stale-timer prevention, disabled activation, cancellation, forced failure, and reset. Browser tests cover real Tab/Enter/Space, stable dimensions, forced failure/retry, hover, reduced motion, axe accessibility, and phone layout in Chromium and mobile WebKit.
+
+
+## Screenshot evidence
+
+These unedited screenshots come from the passing browser run and demonstrate the same deployed component with deterministic simulated outcomes.
+
+![Success with a visible keyboard focus ring](screenshots/FE-AA1/chromium-success.png)
+
+![Forced error with a retry label and persistent status](screenshots/FE-AA1/chromium-error.png)

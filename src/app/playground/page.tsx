@@ -25,7 +25,6 @@ export default function Playground() {
           <Link href="/playground/shader">View the shader hero</Link>
           <Link href="/playground/tools">Inspect tool states</Link>
           <Link href="/playground/buttons">Try buttons with a brain</Link>
-          <Link href="/playground/buttons">Try stateful buttons</Link>
         </div>
         <div className="lab-grid">
           <section className="lab-card">

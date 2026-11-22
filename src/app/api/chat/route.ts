@@ -72,6 +72,17 @@ export async function POST(request: Request) {
         { status: 400 },
       );
     }
+    const invalidVisitorInput = messages.some((message) => {
+      if (message.role !== "user") return false;
+      const text = message.parts.flatMap((part) => part.type === "text" ? [part.text] : []).join("");
+      return !text.trim() || text.length > 2000 || message.parts.some((part) => part.type !== "text");
+    });
+    if (invalidVisitorInput) {
+      return Response.json(
+        { error: "Each visitor message must contain 1–2000 characters of text." },
+        { status: 400 },
+      );
+    }
   } catch {
     return Response.json(
       { error: "We could not process that conversation. Please try a shorter message." },

@@ -1,0 +1,59 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+
+> lead-desk@0.1.0 test:coverage
+> vitest run --coverage
+
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - ESM syntax in a file loaded as CommonJS (vitest.config.ts:1:1). Use a `.mjs` extension or set `"type": "module"` in the closest package.json
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v4.1.12 /workspace/scratch/f7a2d3ee8dce/week6-testing
+      Coverage enabled with v8
+
+ ✓ tests/tools.test.tsx (3 tests) 490ms
+   ✓ executes the validated server tool and renders its returned component  369ms
+ ✓ tests/settings-resilience.test.tsx (3 tests) 849ms
+   ✓ ignores a corrupt preferences cache and keeps the form usable  478ms
+ ✓ tests/state-button.test.tsx (4 tests) 938ms
+   ✓ locks repeated activation, announces loading, shows success, and returns to idle  421ms
+   ✓ exposes forced failure and cancels the demo safely when reset mid-flight  325ms
+ ✓ tests/message-parts.test.tsx (14 tests) 899ms
+     ✓ renders partial input while the assistant is still streaming  383ms
+ ✓ tests/health.test.tsx (4 tests) 951ms
+     ✓ shows loading, then the actual same-origin response  605ms
+ ✓ tests/playground.test.tsx (4 tests) 1039ms
+   ✓ isolates background, wraps both ways, and restores prior inert state and focus  739ms
+ ✓ tests/chat.test.tsx (7 tests) 1433ms
+   ✓ offers useful first-run suggestions and rejects an empty message  564ms
+   ✓ submits a message once and clears the composer  335ms
+ ✓ tests/components.test.tsx (14 tests) 1495ms
+     ✓ renders a real score card with its next action  503ms
+     ✓ saves valid preferences and restores them on remount  407ms
+ ✓ tests/chat-route.test.ts (6 tests) 43ms
+ ✓ tests/chat-edges.test.tsx (4 tests) 284ms
+
+ Test Files  10 passed (10)
+      Tests  63 passed (63)
+   Start at  09:23:31
+   Duration  4.86s (transform 1.03s, setup 2.55s, import 3.86s, tests 8.42s, environment 10.59s)
+
+JUNIT report written to /workspace/scratch/f7a2d3ee8dce/week6-testing/test-results/vitest-junit.xml
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------------------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s                         
+-------------------|---------|----------|---------|---------|-------------------------------------------
+All files          |   82.68 |    76.04 |   77.77 |   83.91 |                                           
+ button-demo.tsx   |   89.74 |    71.42 |   91.66 |   92.85 | 28,45                                     
+ chat.tsx          |   76.62 |    74.28 |   70.83 |   78.26 | 25-26,62-65,73,96-100,136-146,197,236-237 
+ message.tsx       |     100 |       92 |     100 |     100 | 26,34                                     
+ playground.tsx    |   14.28 |        0 |       0 |   16.66 | 23-93                                     
+ state-button.tsx  |     100 |    96.55 |     100 |     100 | 50                                        
+ tool-result.tsx   |     100 |    83.33 |     100 |     100 | 32-38                                     
+-------------------|---------|----------|---------|---------|-------------------------------------------
+
+=============================== Coverage summary ===============================
+Statements   : 82.68% ( 191/231 )
+Branches     : 76.04% ( 146/192 )
+Functions    : 77.77% ( 49/63 )
+Lines        : 83.91% ( 167/199 )
+================================================================================

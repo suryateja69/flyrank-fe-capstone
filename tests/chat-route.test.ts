@@ -29,3 +29,16 @@ it("returns a rate-limit hint without invoking the provider", async () => {
   expect(response.headers.get("retry-after")).toBe("60");
   expect(sdk.streamText).not.toHaveBeenCalled();
 });
+
+it.each(["   ", "x".repeat(2001)])("rejects blank or over-limit visitor input before generation", async (text) => {
+  sdk.streamText.mockReturnValue({ toUIMessageStreamResponse: () => new Response("mocked stream") });
+  const response = await POST(request(JSON.stringify({ messages: [{ id: "limit", role: "user", parts: [{ type: "text", text }] }] })));
+  expect(response.status).toBe(400);
+  expect(sdk.streamText).not.toHaveBeenCalled();
+});
+it("accepts the documented 2000-character boundary with a mocked provider", async () => {
+  sdk.streamText.mockReturnValue({ toUIMessageStreamResponse: () => new Response("mocked stream") });
+  const response = await POST(request(JSON.stringify({ messages: [{ id: "limit", role: "user", parts: [{ type: "text", text: "x".repeat(2000) }] }] })));
+  expect(response.status).toBe(200);
+  expect(sdk.streamText).toHaveBeenCalledOnce();
+});

@@ -18,11 +18,11 @@ it("rejects invalid execution input and keeps a designed failure UI", async () =
   expect(screen.getByRole("alert")).toHaveTextContent("Qualification could not finish");
 });
 it("distinguishes incomplete collection from validated input review", () => {
-  const { rerender, container } = render(<ToolResult state="input-streaming" input={{ company: "Wh" }} />);
-  expect(container.querySelector(".tool-skeleton")).toBeInTheDocument();
-  expect(container.querySelector("dl")).toBeNull();
+  const { rerender } = render(<ToolResult state="input-streaming" input={{ company: "Wh" }} />);
+  expect(screen.getByRole("status")).toHaveTextContent("No score is available yet.");
+  expect(screen.queryByRole("term")).toBeNull();
   rerender(<ToolResult state="input-available" input={input} />);
-  expect(container.querySelector(".tool-skeleton")).toBeNull();
+  expect(screen.getByRole("status")).toHaveTextContent("Scoring the inquiry");
   expect(screen.getByText("Purchasing authority")).toBeVisible();
   expect(screen.getByText("Confirmed")).toBeVisible();
 });

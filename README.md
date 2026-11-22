@@ -132,3 +132,7 @@ The UI renders input-streaming as a preparation skeleton, input-available as a l
 Live demo: https://leaddesk-capstone.vercel.app/playground/buttons — select **Force success** or **Force failure**, then activate the save button. A disable toggle and reset control make the remaining cases inspectable. The save is explicitly simulated; it sends no data and requires no provider key.
 
 The reusable [StateButton](src/components/state-button.tsx) covers idle, hover/focus, press, loading, success, error/retry, disabled, and return to idle. Hover/press use 120ms ease-out for prompt acknowledgement. State faces crossfade and shift 4px over 200ms with cubic-bezier(.2,.8,.2,1), while a single 240ms nudge marks an error. Success holds 1.8s, error 3.2s, then the button returns to idle; the result text persists. Fixed dimensions avoid layout shifts, and only transform/opacity animate. Reduced motion removes animation while keeping all feedback and keyboard focus. [Requirements and verification](docs/FE-AA1.md).
+
+## Testing pass (FE09)
+
+Run `npm ci`, `npm run typecheck`, `npm run test:coverage`, `npm run build`, `npx playwright install --with-deps chromium webkit`, and `npm run test:e2e`. AI responses are mocked in tests; no real provider calls or credentials are needed. CI runs the same commands on push and pull requests, with coverage gates and test-evidence artifacts. [FE09 test inventory and recorded failing-test fix](docs/FE09.md) maps component cases, primary-flow coverage, and verification evidence.

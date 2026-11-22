@@ -1,8 +1,13 @@
 name: Quality checks
 on: [push, pull_request]
+permissions:
+  contents: read
 jobs:
   quality:
     runs-on: ubuntu-latest
+    env:
+      GOOGLE_GENERATIVE_AI_API_KEY: ""
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -11,15 +16,17 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run typecheck
-      - run: npm run test:coverage
+      - name: Component and route tests (mocked AI)
+        run: npm run test:coverage
       - run: npm run build
       - run: npx playwright install --with-deps chromium webkit
-      - run: npm run test:e2e
+      - name: Primary-flow and browser regression tests
+        run: npm run test:e2e
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: test-evidence
           path: |
-            coverage/coverage-summary.json
+            coverage/
             playwright-report/
             test-results/

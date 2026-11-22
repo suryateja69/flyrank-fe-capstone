@@ -1,0 +1,43 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+
+> lead-desk@0.1.0 test
+> vitest run tests/chat-route.test.ts
+
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - ESM syntax in a file loaded as CommonJS (vitest.config.ts:1:1). Use a `.mjs` extension or set `"type": "module"` in the closest package.json
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v4.1.12 /workspace/scratch/f7a2d3ee8dce/week6-testing
+
+ ❯ tests/chat-route.test.ts (6 tests | 2 failed) 38ms
+   × rejects blank or over-limit visitor input before generation 8ms
+   × rejects blank or over-limit visitor input before generation 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/chat-route.test.ts > rejects blank or over-limit visitor input before generation
+ FAIL  tests/chat-route.test.ts > rejects blank or over-limit visitor input before generation
+AssertionError: expected 200 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 200
+
+ ❯ tests/chat-route.test.ts:36:27
+     34|   sdk.streamText.mockReturnValue({ toUIMessageStreamResponse: () => ne…
+     35|   const response = await POST(request(JSON.stringify({ messages: [{ id…
+     36|   expect(response.status).toBe(400);
+       |                           ^
+     37|   expect(sdk.streamText).not.toHaveBeenCalled();
+     38| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 4 passed (6)
+   Start at  09:21:20
+   Duration  2.01s (transform 88ms, setup 286ms, import 297ms, tests 38ms, environment 1.00s)
+
